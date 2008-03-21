@@ -1,3 +1,4 @@
+
 import(methods)
 
 importFrom(stats, predict)
@@ -28,6 +29,7 @@ exportMethods(
 	BIC,
 	fit,
 	npar,
+	freepars,
 	getdf,
 	nobs,
 	depmix,
