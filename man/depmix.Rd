@@ -189,7 +189,7 @@ number of observations, ie \code{sum(ntimes)} that is used in computing the
 
 }
 
-\author{Ingmar Visser \email{i.visser@uva.nl}} 
+\author{Ingmar Visser \email{i.visser@uva.nl} & Maarten Speekenbrink} 
 
 \seealso{
 
@@ -226,7 +226,6 @@ mod
 # state probabilities model
 mod <- setpars(mod, getpars(mod,which="fixed"))
 mod
-
 
 }
 
