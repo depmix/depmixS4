@@ -24,7 +24,7 @@
 	\S4method{fit}{depmix}(object, fixed=NULL, equal=NULL, conrows=NULL,
 		conrows.upper=0, conrows.lower=0, method=NULL,...)
 	
-	\S4method{posterior}{depmix.fitted}(object,...)
+	\S4method{posterior}{depmix.fitted}(object)
 	\S4method{summary}{depmix.fitted}(object)
 	
 }
