@@ -54,6 +54,6 @@ models.}
 	}
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{ methods }

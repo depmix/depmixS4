@@ -218,6 +218,6 @@ llratio(mod3,mod1)
 
 }
 
-\author{Ingmar Visser}
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{methods}

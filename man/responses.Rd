@@ -181,6 +181,6 @@ brief description of these here.}
 	
 }
 
-\author{Maarten Speekenbrink}
+\author{Maarten Speekenbrink & Ingmar Visser}
 
 \keyword{models}

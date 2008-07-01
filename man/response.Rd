@@ -81,6 +81,6 @@ formulae and family objects.
 	
 }
 
-\author{Ingmar Visser} 
+\author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{methods}

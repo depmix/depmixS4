@@ -57,7 +57,7 @@
 
 }
 
-\author{ Ingmar Visser }
+\author{ Maarten Speekenbrink & Ingmar Visser }
 
 \examples{
 	# add some later
