@@ -105,7 +105,7 @@ brief description of these here.}
 
 }
 
-\section{examples}{
+\examples{
 	
 	mod <- GLMresponse(rnorm(1000)~1)
 
