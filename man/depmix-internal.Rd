@@ -52,6 +52,10 @@
 \alias{getpars,GLMresponse-method}
 \alias{setpars,GLMresponse-method}
 
+\alias{getpars,MVNresponse-method}
+\alias{setpars,MVNresponse-method}
+
+
 \alias{npar,response-method}
 
 \title{Depmix internal functions}
