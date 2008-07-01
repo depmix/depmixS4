@@ -6,6 +6,7 @@
 
 \alias{GLMresponse-class}
 \alias{transInit-class}
+\alias{MVNresponse-class}
 
 \title{Class "GLMresponse" and class "transInit"}
 
