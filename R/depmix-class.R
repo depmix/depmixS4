@@ -144,7 +144,12 @@ setMethod("simulate",signature(object="depmix"),
   	states[bt,] <- simulate(object@prior,n=nsim,is.prior=T)
   	sims <- array(,dim=c(nt,ns,nsim))
   	for(i in 1:ns) {
-      sims[,i,] <- simulate(object@transition[[i]],nsim=nsim)
+      if(is.stationary(object)) {
+        # TODO: this is a temporary fix!!! 
+        sims[,i,] <- simulate(object@transition[[i]],nsim=nsim,times=rep(1,nt))
+      } else {
+        sims[,i,] <- simulate(object@transition[[i]],nsim=nsim)
+      }
  	  }
  	  # track states
   	for(case in 1:lt) {
