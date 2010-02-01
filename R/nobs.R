@@ -1,1 +1,0 @@
-setMethod("nobs", signature(object="mix"),	function(object, ...) {		sum(object@ntimes)	})
