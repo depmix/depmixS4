@@ -15,7 +15,7 @@ Changes in depmixS4 version 0.3-0
 
 Changes in depmixS4 version 0.2-2
 
-  o fixed a warning produced when specifying conrows.upper and .lower in the
+  o fixed a warning produced when specifying conrows.upper and .lower in
     the fit function
 
   o added error message in case the initial log likelihood is infeasible
