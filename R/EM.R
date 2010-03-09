@@ -2,7 +2,7 @@
 # Maarten Speekenbrink 23-3-2008
 # 
 
-em <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),verbose=FALSE,...) {
+em <- function(object,...) {
 	if(!is(object,"mix")) stop("object is not of class '(dep)mix'")
 	call <- match.call()
 	if(is(object,"depmix")) {
@@ -15,13 +15,13 @@ em <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),verbose=F
 }
 
 # em for lca and mixture models
-em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),verbose=FALSE,...) {
+em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),random.start=FALSE,verbose=FALSE,...) {
 	
 	if(!is(object,"mix")) stop("object is not of class 'mix'")
 	
 	crit <- match.arg(crit)
 	
-	ns <- object@nstates
+	ns <- nstates(object)
 	ntimes <- ntimes(object)
 	lt <- length(ntimes)
 	et <- cumsum(ntimes)
@@ -30,13 +30,18 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),verbo
 	converge <- FALSE
 	j <- 0
 	
-	# compute responsibilities
-	B <- apply(object@dens,c(1,3),prod)
-	gamma <- object@init*B
-	LL <- sum(log(rowSums(gamma)))
-	# normalize
-	gamma <- gamma/rowSums(gamma)
-	
+	if(random.start) {
+		nr <- sum(ntimes(object))
+		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
+		gamma <- gamma/rowSums(gamma)
+	} else {
+		# compute responsibilities
+		B <- apply(object@dens,c(1,3),prod)
+		gamma <- object@init*B
+		LL <- sum(log(rowSums(gamma)))
+		# normalize
+		gamma <- gamma/rowSums(gamma)
+	}
 	LL.old <- LL + 1
 	
 	while(j <= maxit & !converge) {
@@ -104,12 +109,12 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),verbo
 }
 
 # em for hidden markov models
-em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),verbose=FALSE,...) {
+em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),random.start=FALSE,verbose=FALSE,...) {
 	
 	if(!is(object,"depmix")) stop("object is not of class '(dep)mix'")
 	crit <- match.arg(crit)
 	
-	ns <- object@nstates
+	ns <- nstates(object)
 	
 	ntimes <- ntimes(object)
 	lt <- length(ntimes)
@@ -127,6 +132,12 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ve
 	fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
 	LL <- fbo$logLike
 	LL.old <- LL + 1
+	
+	if(random.start) {
+		nr <- sum(ntimes(object))
+		fbo$gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
+		fbo$gamma <- fbo$gamma/rowSums(fbo$gamma)
+	}
 	
 	while(j <= maxit & !converge) {
 		

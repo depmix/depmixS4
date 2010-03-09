@@ -28,14 +28,14 @@
 \usage{
 	
 	\S4method{fit}{depmix}(object, fixed=NULL, equal=NULL, conrows=NULL,
-		conrows.upper=0, conrows.lower=0, method=NULL,tol=1e-8,
-		crit=c("relative","absolute"),verbose=TRUE,...)
+		conrows.upper=0, conrows.lower=0, method=NULL,em.control=list(tol=1e-8,
+		crit=c("relative","absolute"),random.start=FALSE),verbose=TRUE,...)
 	
 	\S4method{summary}{depmix.fitted}(object,which="all")
 
 	\S4method{fit}{mix}(object, fixed=NULL, equal=NULL, conrows=NULL,
-		conrows.upper=0, conrows.lower=0, method=NULL,tol=1e-8,
-		crit=c("relative","absolute"),verbose=TRUE,...)
+		conrows.upper=0, conrows.lower=0, method=NULL,em.control=list(tol=1e-8,
+		crit=c("relative","absolute"),random.start=FALSE),verbose=FALSE,...)
 	
 	\S4method{summary}{mix.fitted}(object,which="all")
 
@@ -59,10 +59,7 @@
 	\item{method}{The optimization method; mostly determined by
 		constraints.}
 		
-	\item{tol}{The tolerance level for convergence.}
-  
-	\item{crit}{The convergence criterion in the EM algorithm; either the relative
-  		change in the log likelihood, or the absolute change in the log-likelihood.}
+	\item{em.control}{Named list with control parameters for the EM algorithm (see details).}
   
 	\item{verbose}{Should optimization information be displayed on screen?}
 	
@@ -76,7 +73,9 @@
 \details{ 
 
 	Models are fitted by the EM algorithm if there are no constraints on
-	the parameters.  Otherwise the general optimizers \code{solnp}, the
+	the parameters. Aspects of the EM algorithm can be controlled through
+	the \code{control.em} argument (see below). 
+	Otherwise the general optimizers \code{solnp}, the
 	default (from package \code{Rsolnp}) or \code{donlp2} (from package
 	\code{Rdonlp2}) are used which handle general linear (in-)equality
 	constraints.
@@ -116,6 +115,28 @@
 	\code{fit}'ted models; the first object should have the largest degrees
 	of freedom (find out by using \code{\link{freepars}}).
 	
+}
+
+\section{Control parameters for the EM algorithm}{
+  Aspects of EM algorithm can be controlled by the \code{em.control} argument.
+  This named list currently observes the following parameters:
+  \describe{
+  \item{\code{tol}:}{sets the the tolerance level for convergence.}
+  
+  \item{\code{criterion}:}{sets the convergence criterion to 	either the relative 
+  change in the log-likelihood or the absolute change in the log-likelihood.
+  The relative likelihood criterion (the default) assumes convergence on iteration 
+  \eqn{i}{i} when \eqn{\frac{\log L(i) - \log L(i-1)}{\log L(i-1)} < \text{tol}}{%
+  (logLik(i) - logLik(i-1))/logLik(i-1) < tol}. The absolute likelihood
+  criterion assumes convergence on iteration i when 
+  \eqn{\log L(i) - \log L(i-1) < tol}{(logLik(i) - logLik(i-1)) < tol}.}
+  
+  \item{\code{random.start}:}{is used for a (limited) random initialization of the parameters. In 
+  particular, if \code{random.start=TRUE}, the (posterior) state probabilities are randomized
+  at iteration 0 (using a uniform distribution). Random initialization is useful when no
+  initial parameters can be given to distinguish between the states. It is also useful for
+  repeated estimation from different starting values.}
+  }
 }
 
 \value{
