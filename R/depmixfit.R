@@ -38,14 +38,6 @@ setMethod("fit",
 		
 		if(method=="donlp"||method=="rsolnp") {
 			
-			reqdon <- require(Rdonlp2,quietly=TRUE)
-			if(method=="donlp"&!reqdon) {
-				warning("Rdonlp2 not available, method changed to rsolnp")
-				method="rsolnp"
-			}
-			
-			if(method=="rsolnp"&!(require(Rsolnp,quietly=TRUE))) stop("Optimization requires either 'Rdonlp2' or 'Rsolnp'")
-			
 			# determine which parameters are fixed
  			if(fi) {
  				if(length(fixed)!=npar(object)) stop("'fixed' does not have correct length")
@@ -124,6 +116,11 @@ setMethod("fit",
 			}
 			
 			if(method=="donlp") {
+				
+				reqdon <- require(Rdonlp2,quietly=TRUE)
+				
+				if(!reqdon) stop("Rdonlp2 not available.")
+				
 				# set donlp2 control parameters
 				cntrl <- donlp2.control(hessian=FALSE,difftype=2,report=TRUE)	
 				
@@ -155,6 +152,8 @@ setMethod("fit",
 			}
 			
 			if(method=="rsolnp") {
+				
+				if(!(require(Rsolnp,quietly=TRUE))) stop("Method 'rsolnp' requires package 'Rsolnp'")
 				
 				# separate equality and inequality constraints
 				ineq <- which(lin.u!=lin.l)
@@ -196,7 +195,8 @@ setMethod("fit",
 					ineqUB = ineqUB, 
 					LB = par.l[!fixed], 
 					UB = par.u[!fixed], 
-					control = list(trace = 1)
+					control = list(delta = 1e-5, tol = 1e-6, trace = 1),
+					...
 				)
 				
 				if(class(object)=="depmix") class(object) <- "depmix.fitted"

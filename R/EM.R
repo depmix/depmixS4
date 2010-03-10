@@ -30,18 +30,19 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 	converge <- FALSE
 	j <- 0
 	
+	# compute responsibilities
+	B <- apply(object@dens,c(1,3),prod)
+	gamma <- object@init*B
+	LL <- sum(log(rowSums(gamma)))
+	# normalize
+	gamma <- gamma/rowSums(gamma)
+	
 	if(random.start) {
 		nr <- sum(ntimes(object))
 		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
 		gamma <- gamma/rowSums(gamma)
-	} else {
-		# compute responsibilities
-		B <- apply(object@dens,c(1,3),prod)
-		gamma <- object@init*B
-		LL <- sum(log(rowSums(gamma)))
-		# normalize
-		gamma <- gamma/rowSums(gamma)
-	}
+	} 
+	
 	LL.old <- LL + 1
 	
 	while(j <= maxit & !converge) {
