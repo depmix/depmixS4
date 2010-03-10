@@ -35,7 +35,7 @@
 
 	\S4method{fit}{mix}(object, fixed=NULL, equal=NULL, conrows=NULL,
 		conrows.upper=0, conrows.lower=0, method=NULL,em.control=list(tol=1e-8,
-		crit=c("relative","absolute"),random.start=FALSE),verbose=FALSE,...)
+		crit=c("relative","absolute"),random.start=FALSE),verbose=TRUE,...)
 	
 	\S4method{summary}{mix.fitted}(object,which="all")
 
@@ -49,17 +49,18 @@
 	\item{fixed}{Vector of mode logical indicating which parameters should 
 		be fixed.}
 
-	\item{equal}{Vector indicating equality constraints; see details.}
+	\item{equal}{Vector indicating equality constraints; see Details.}
 
-	\item{conrows}{Rows of a general linear constraint matrix; see details.}
+	\item{conrows}{Rows of a general linear constraint matrix; see Details.}
 
 	\item{conrows.upper, conrows.lower}{Upper and lower bounds for the
-		linear constraints; see details.}
+		linear constraints; see Details.}
 
 	\item{method}{The optimization method; mostly determined by
 		constraints.}
 		
-	\item{em.control}{Named list with control parameters for the EM algorithm (see details).}
+	\item{em.control}{Named list with control parameters for the EM
+		algorithm (see Control parameters below).}
   
 	\item{verbose}{Should optimization information be displayed on screen?}
 	
@@ -118,25 +119,32 @@
 }
 
 \section{Control parameters for the EM algorithm}{
-  Aspects of EM algorithm can be controlled by the \code{em.control} argument.
-  This named list currently observes the following parameters:
-  \describe{
-  \item{\code{tol}:}{sets the the tolerance level for convergence.}
+	
+	Aspects of EM algorithm can be controlled by the \code{em.control}
+	argument.  This named list currently observes the following parameters:
+	
+	\describe{
+		\item{\code{tol}:}{sets the the tolerance level for convergence.}
+	
+		\item{\code{criterion}:}{sets the convergence criterion to either
+		the relative change in the log-likelihood or the absolute change in
+		the log-likelihood.  The relative likelihood criterion (the
+		default) assumes convergence on iteration \eqn{i}{i} when
+		\eqn{\frac{\log L(i) - \log L(i-1)}{\log L(i-1)} <
+		tol}{\frac{\log L(i) - \log L(i-1)}{\log L(i-1)} <
+		tol}.  The absolute likelihood criterion assumes convergence
+		on iteration \eqn{i}{i} when \eqn{\log L(i) - \log L(i-1) <
+		tol}{(logLik(i) - logLik(i-1)) < tol}.}
   
-  \item{\code{criterion}:}{sets the convergence criterion to 	either the relative 
-  change in the log-likelihood or the absolute change in the log-likelihood.
-  The relative likelihood criterion (the default) assumes convergence on iteration 
-  \eqn{i}{i} when \eqn{\frac{\log L(i) - \log L(i-1)}{\log L(i-1)} < \text{tol}}{%
-  (logLik(i) - logLik(i-1))/logLik(i-1) < tol}. The absolute likelihood
-  criterion assumes convergence on iteration i when 
-  \eqn{\log L(i) - \log L(i-1) < tol}{(logLik(i) - logLik(i-1)) < tol}.}
-  
-  \item{\code{random.start}:}{is used for a (limited) random initialization of the parameters. In 
-  particular, if \code{random.start=TRUE}, the (posterior) state probabilities are randomized
-  at iteration 0 (using a uniform distribution). Random initialization is useful when no
-  initial parameters can be given to distinguish between the states. It is also useful for
-  repeated estimation from different starting values.}
-  }
+		\item{\code{random.start}:}{is used for a (limited) random
+		initialization of the parameters.  In particular, if
+		\code{random.start=TRUE}, the (posterior) state probabilities are
+		randomized at iteration 0 (using a uniform distribution).  Random
+		initialization is useful when no initial parameters can be given to
+		distinguish between the states.  It is also useful for repeated
+		estimation from different starting values.
+		} 
+	} 
 }
 
 \value{
@@ -145,13 +153,16 @@
 	\code{\link{depmix.fitted}} which contains the
 	original \code{depmix} object, and further has slots:
 	
-	\item{message}{: Convergence information.}
+	\describe{
+		\item{\code{message}:}{Convergence information.}
 	
-	\item{conMat}{: The constraint matrix A, see details.}
+		\item{\code{conMa}t:}{The constraint matrix A, see Details.}
 	
-	\item{posterior}{: The posterior state sequence (computed with the
-	viterbi algorithm), and the posterior probabilities (delta
-	probabilities in Rabiner, 1989, notation).}
+		\item{\code{posterior}:}{The posterior state sequence (computed
+		with the viterbi algorithm), and the posterior probabilities (delta
+		probabilities in Rabiner, 1989, notation).}
+		
+	}
 	
 	The print method shows the \code{message} along with the likelihood and
 	AIC and BIC; the summary method prints the parameter estimates.
