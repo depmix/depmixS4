@@ -39,7 +39,10 @@ dm_dmvnorm <- function(x,mean,sigma,log=FALSE,logdet,invSigma) {
         x <- matrix(x, ncol = length(x))
     }
     if (missing(mean)) {
-        mean <- rep(0, length = ncol(x))
+        mean <- matrix(0, ncol = ncol(x))
+    }
+    if(is.vector(mean)) {
+    	mean <- matrix(mean, ncol = ncol(x))
     }
     if(missing(invSigma)) {
     	if (missing(sigma)) {
@@ -57,11 +60,15 @@ dm_dmvnorm <- function(x,mean,sigma,log=FALSE,logdet,invSigma) {
 	if (NCOL(invSigma) != NCOL(mean)) {
 		stop("mean and sigma have non-conforming size")
 	}
+	if(missing(logdet)) {
+		ev <- eigen(sigma, symmetric = TRUE, only.values = TRUE)$values
+		if(!all(ev >= 0)) return(rep(NaN,nrow(x))) else logdet <- sum(log(ev))
+	}
 	if(NROW(mean) == NROW(x)) {
 		# varying means
 		
 		# from "mahalanobis":    
-		x <- as.matrix(x) - mean
+		x <- x - mean
     	distval <- rowSums((x %*% invSigma) * x)
     	#names(retval) <- rownames(x)
    	 	#retval
@@ -72,7 +79,6 @@ dm_dmvnorm <- function(x,mean,sigma,log=FALSE,logdet,invSigma) {
 		}
 		distval <- mahalanobis(x, center = mean, cov = invSigma, inverted=TRUE)
 	}	
-    if(missing(logdet)) logdet <- sum(log(eigen(sigma, symmetric = TRUE, only.values = TRUE)$values))
     logretval <- -(ncol(x) * log(2 * pi) + logdet + distval)/2
     if (log) {
         return(logretval)
