@@ -1,10 +1,10 @@
 Package: depmixS4
-Version: 0.9-1
-Date: 2010-06-03
-Title: Dependent Mixture Models in S4
+Version: 1.0-0
+Date: 2010-06-20
+Title: Dependent Mixture Models in S4 - Hidden Markov Models
 Author: Ingmar Visser <i.visser@uva.nl>, Maarten Speekenbrink <m.speekenbrink@ucl.ac.uk>
 Maintainer: Ingmar Visser <i.visser@uva.nl>
-Depends: R (>= 2.10.1), stats, nnet, methods, MASS, Rsolnp
+Depends: R (>= 2.11.1), stats, nnet, methods, MASS, Rsolnp
 Suggests: Rdonlp2, gamlss, gamlss.dist
 Description: Fit latent (hidden) Markov models on mixed categorical and continuous (timeseries)
    data, otherwise known as dependent mixture models
