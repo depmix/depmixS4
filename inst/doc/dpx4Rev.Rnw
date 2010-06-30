@@ -1,6 +1,6 @@
 % -*- mode: noweb; noweb-default-code-mode: R-mode; -*-
 
-\documentclass[article]{jss}
+\documentclass[nojss]{jss}
 \usepackage{amsmath}
 
 %\usepackage[]{amsmath, amsfonts, amstext, amsthm} 
@@ -43,6 +43,8 @@
 	optimization with the \pkg{Rsolnp} or \pkg{Rdonlp2} routines.
 	
 }
+
+%\VignetteIndexEntry{hidden Markov model}
 
 \Keywords{hidden Markov model, dependent mixture model, mixture 
 model, constraints}
