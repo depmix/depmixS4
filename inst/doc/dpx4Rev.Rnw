@@ -19,6 +19,10 @@
         
 \title{\pkg{depmixS4} : An \proglang{R}-package for Hidden Markov Models}
 
+% \thanks{This article was originally published in the {\em Journal of 
+% Statistical Software}, volume ??, etc. Please refer to that paper 
+% when citing this package.}
+
 
 %% for pretty printing and a nice hypersummary also set:
 \Plainauthor{Ingmar Visser, Maarten Speekenbrink} %% comma-separated
@@ -102,10 +106,16 @@ URL: \url{http://www.ingmar.org/}
 
 \maketitle
 
-<<echo=FALSE>>=	
+<<echo=FALSE, results=HIDE>>=	
 .Options$digits<-3
 library(depmixS4)
 @
+
+
+NOTE: This article was originally published in the {\em Journal of 
+Statistical Software}, volume ??, etc. Please refer to that paper 
+when citing this package.
+
 
 %% include your article here, just as usual
 %% Note that you should use the \pkg{}, \proglang{} and \code{} commands.
