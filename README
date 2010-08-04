@@ -10,6 +10,7 @@ multinomial logistic responses with covariates.  The transition matrix and
 the initial state probabilities are also modeled as multinomial logistics
 (or multinomials with identity link, which is the default when no
 covariates are present) with the possibility of including covariates.
+
 Optimization is by default done using the EM algorithm.  When linear
 constraints are included, package Rsolnp is used for optimization (there is
 also support for using Rdonlp2 as optimizer, see details below).  New
