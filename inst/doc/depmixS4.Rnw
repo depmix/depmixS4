@@ -11,7 +11,7 @@
 \SweaveOpts{engine = R, echo = TRUE, keep.source = TRUE, eps = FALSE}
 
 %\VignetteIndexEntry{depmixS4: An R Package for Hidden Markov Models}
-%\VignetteDepends{depmixS4,gamlss,gamlss.data}
+%\VignetteDepends{depmixS4,gamlss,gamlss.dist}
 %\VignetteKeywords{hidden Markov model, dependent mixture model, mixture model, constraints}
 %\VignettePackage{depmixS4}
 
