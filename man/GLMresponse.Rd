@@ -1,7 +1,5 @@
 \name{GLMresponse}
 
-\docType{method}
-
 \alias{GLMresponse}
 \alias{GLMresponse,formula-method}
 

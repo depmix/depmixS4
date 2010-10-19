@@ -1,7 +1,5 @@
 \name{fit}
 
-\docType{method}
-
 \alias{fit}
 \alias{depmix.fit}
 \alias{fit,depmix-method}
