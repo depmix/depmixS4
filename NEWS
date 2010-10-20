@@ -1,4 +1,20 @@
 
+Changes in depmixS4 version 1.0-1
+
+  o minor changes in documentation to conform to R 2.12.0 standards. 
+
+  o fixed a bug concerning random start values (the argument to specify
+    this was not passed to the EM algorithm ...). 
+
+  o changed the emcontrol argument to the fit function; it now calls 
+    a function em.control which returns the list of control parameters, which
+    now also includes maxit, the max number of iterations of the EM algorithm. 
+    This makes future additions to EM control parameters easier. 
+
+  o The use of random parameter initialization is now the default when using EM 
+    to fit models. 
+
+
 Changes in depmixS4 version 1.0-0
 
   o added a vignette to the package and upped the version number 1.0-0 to 
