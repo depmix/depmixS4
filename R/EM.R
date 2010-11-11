@@ -39,6 +39,8 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		nr <- sum(ntimes(object))
 		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
 		gamma <- gamma/rowSums(gamma)
+		# add stuff to reestimate the model here and compute LL again
+		# based on these starting values
 	} 
 	
 	LL.old <- LL + 1
@@ -122,16 +124,35 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 	converge <- FALSE
 	j <- 0
 	
-	# initial expectation
-	fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
-	LL <- fbo$logLike
-	LL.old <- LL + 1
 	
 	if(random.start) {
+				
 		nr <- sum(ntimes(object))
-		fbo$gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
-		fbo$gamma <- fbo$gamma/rowSums(fbo$gamma)
+		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nr=nr,nc=ns)
+		gamma <- gamma/rowSums(gamma)
+		LL <- -1e10
+		
+		for(i in 1:ns) {
+			for(k in 1:nresp(object)) {
+				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=gamma[,i])
+				# update dens slot of the model
+				object@dens[,k,i] <- dens(object@response[[i]][[k]])
+			}
+		}
+		
+		# initial expectation
+		fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+		LL <- fbo$logLike
+		
+		if(is.nan(LL)) stop("Cannot find suitable starting values; please provide them.")
+		
+	} else {
+		# initial expectation
+		fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+		LL <- fbo$logLike
 	}
+	
+	LL.old <- LL + 1
 	
 	while(j <= maxit & !converge) {
 		
