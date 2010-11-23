@@ -25,7 +25,8 @@
 \Abstract{	
   This introduction to the \proglang{R} package \pkg{depmixS4} is a (slightly)
   modified version of \cite{Visser+Speekenbrink:2010}, published in the
-  \emph{Journal of Statistical Software}.
+  \emph{Journal of Statistical Software}. Please refer to that 
+  article when using \pkg{depmixS4}. The current version is 1.0-1. 
 
   \pkg{depmixS4} implements a general framework for defining and
   estimating dependent mixture models in the \proglang{R}
@@ -1013,7 +1014,6 @@ and transition models with two goals in mind.  First, to speed up
 Hessian of the estimated parameters so as to arrive at standard errors
 for those.  We are also planning to implement goodness-of-fit
 statistics \citep{Titman2008}.
-
 
 \section*{Acknowledgments} 
 
