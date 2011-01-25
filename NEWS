@@ -1,3 +1,8 @@
+Changes in depmixS4 version ???
+
+  o added a meaningful error message in the EM algorithm for lca/mixture 
+    models in case the initial log likelihood is NA (thanks to Matthias
+    Ihrke for pointing this out). 
 
 Changes in depmixS4 version 1.0-1
 
