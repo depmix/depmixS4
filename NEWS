@@ -1,0 +1,161 @@
+Changes in depmixS4 version 1.0-2
+
+  o fixed a bug in simulation of binomial response model data (the response
+    consists of the number of successes, and the number of failures; in 
+    simulation, the number of failures was an exact copy of the number of
+    successes). 
+
+  o added a meaningful error message in the EM algorithm for lca/mixture 
+    models in case the initial log likelihood is NA (thanks to Matthias
+    Ihrke for pointing this out). 
+
+Changes in depmixS4 version 1.0-1
+
+  o minor changes in documentation to conform to R 2.12.0 standards. 
+
+  o fixed a bug concerning random start values (the argument to specify
+    this was not passed to the EM algorithm and hence was completely 
+    ineffective ...). 
+
+  o changed the emcontrol argument to the fit function; it now calls 
+    a function em.control which returns the list of control parameters, which
+    now also includes maxit, the max number of iterations of the EM algorithm. 
+    This makes future additions to EM control parameters easier. 
+
+  o random parameter initialization is now the default when using EM 
+    to fit models. 
+  
+  o fixed a bug in multinomial models with n>1; the parameters are now 
+    normalized such that they sum to unity (this bug was introduced in 
+    version 0.9-0 in multinomial models with identity link). 
+
+  o added an error message for multinomial response models with n>1 and 
+    link='mlogit' as this case is not handled; n>1 multinomial can use the
+    'identity' link function. 
+
+Changes in depmixS4 version 1.0-0
+
+  o added a vignette to the package and upped the version number 1.0-0 to 
+    celebrate publication in the Journal of Statistical Software. 
+
+Changes in depmixS4 version 0.9-1
+
+  o fixed a bug in setting the lower and upper bounds for GLMresponse
+    models (the number of bounds was wrong for models with covariates/
+    predictors; these bounds are only used in constrained optimization in
+    which case they produced an error immediately; in EM optimization these
+    bounds are not used).
+
+Changes in depmixS4 version 0.9-0
+
+  o added optimization using Rsolnp, which can be invoked by using 
+    method="rsolnp" in calling fit on (dep-)mix objects. Note that 
+    this is meant for fitting models with additional constraints. 
+    Method="rsolnp" is now the default when fitting constrained 
+    models, method="donlp" is still supported. 
+
+  o added documentation for control arguments that can be passed to 
+    em algorithm, particularly for controlling the tolerance in 
+    optimization.
+
+  o added multinomial models with identity link for transition and prior 
+    probabilities. These are now the default when no covariates are 
+    present. 
+
+  o added bounds and constraints for multinomial identity models such
+    that these constraints are satisfied when fitting models with
+    method="rsolnp" or "donlp".  Also, variance and sd parameters in
+    gaussian and multivariate normal models are given bounds to prevent
+    warnings and errors in optimization of such models using rsolnp or 
+    donlp.
+
+  o added option to generate starting values as part of the EM 
+    algorithm. 
+
+  o fixed a bug in multinomial response models with n>1; the response for
+    these models can be specified as a k-column matrix with the number of
+    observed responses for each category; the loglikelihood for these
+    models in which there was more than 1 observation per row was
+    incorrect; note that such models may lead to some numerical
+    instabilities when n is large.
+
+Changes in depmixS4 version 0.3-0
+  
+  o added multinomial response function with identity link (no covariates
+    allowed in such a model); useful when (many) boundary values occur; 
+    currently no constraints are used for such models, and hence only EM
+    can be used for optimization, or alternatively, if and when Rdonlp2
+    is used, sum constraints need to be added when fitting the model.
+    See ?GLMresponse for details. 
+
+  o added an example of how to specify a model with multivariate normal
+    responses (and fixed a bug in MVNresponse that prevented such models
+    from being specified in the first place). See ?makeDepmix for an 
+    example. 
+
+Changes in depmixS4 version 0.2-2
+
+  o fixed a warning produced when specifying conrows.upper and .lower in
+    the fit function
+
+  o added error message in case the initial log likelihood is infeasible
+
+  o fixed a bug in the fit function for multinomial response models with 
+    covariates (thanks to Gilles Dutilh for spotting this)
+
+Changes in depmixS4 version 0.2-1
+
+  o fixed a bug in the Viterbi algorithm used to compute posterior states
+    (this bug was introduced in version 0.2-0)
+  
+  o restructured test files somewhat
+
+  o fixed a bug in the use of the conrows argument in the fit function (a 
+    missing drop=FALSE statement)
+
+  o updated help files for mix classes
+
+  o fixed a bug in setting the starting values of regression coefficients in 
+    prior and transInit models with covariates (thanks to Verena Schmittmann 
+    for reporting this)
+
+  o added newx argument to predict function of transInit objects, to be used
+    for predicting probabilities depending on covariates (useful in eg plotting
+    transition probabilities as function of a covariate)
+
+  o added example of the use of conrows argument in fitting functions and other 
+    minor updates in documentation
+  
+Changes in depmixS4 version 0.2-0
+
+  o restructured R and Rd (help) files; added depmixS4 help with a short
+    overview of the package and links to appropriate help files
+  
+  o added function 'simulate' to generate new data from a (fitted) model
+  
+  o added function 'forwardbackward' to access the forward and backward 
+    variables as well as the smoothed transition and state variables
+  
+  o added new glm distributions: gamma, poisson
+  
+  o added multivariate normal distribution
+  
+  o freepars now works correctly on both depmix and depmix.fitted objects
+  
+  o added function 'nlin' to compute the number of linear constraints in 
+    a fitted model object
+
+  o added mix class for mixture and latent class models; the depmix class 
+    extends this mix class and adds a transition model to it
+  
+  o added help file for makeDepmix to provide full control in specifying 
+    models
+  
+  o minor changes to make depmixS4 compatible with R 2.7.1
+  
+
+Changes in depmixS4 version 0.1-1
+
+  o adjusted for R 2.7.0
+
+First version released on CRAN: 0.1-0
