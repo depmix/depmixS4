@@ -1,4 +1,11 @@
 
+Changes in depmixS4 version 1.0-4
+
+  o Fixed a bug in simulation of gaussian response model, which was 
+    returning NaNs due to an error in assignment of the sd parameter
+   (introduced in version x). Thanks to Jeffrey Arnold for reporting
+   this (bug #1365). 
+
 Changes in depmixS4 version 1.0-3
 
   o Using AIC/BIC/logLik/nobs generics from stats/stats4 rather than 
