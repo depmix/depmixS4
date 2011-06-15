@@ -1,5 +1,8 @@
 
-Changes in depmixS4 version 1.0-4
+Changes in depmixS4 version 1.??
+  
+  o Using nobs generic from stats/stats4 rather than defining them 
+    anew (which gave clashes with other packages that did the same).
 
   o Fixed a bug in simulation of gaussian response model, which was 
     returning NaNs due to an error in assignment of the sd parameter
@@ -8,7 +11,7 @@ Changes in depmixS4 version 1.0-4
 
 Changes in depmixS4 version 1.0-3
 
-  o Using AIC/BIC/logLik/nobs generics from stats/stats4 rather than 
+  o Using AIC/BIC/logLik generics from stats/stats4 rather than 
     defining them anew (which gave clashes with other packages that did 
     the same).
 
