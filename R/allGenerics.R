@@ -3,6 +3,9 @@
 # Ingmar Visser, 23-3-2008
 # 
 
+# 17-6-2011: added dynamic lib statement to include the C code 
+# version of forward backward routine
+
 .First.lib <- function(lib, pkg) { 
 	require(stats)
 	require(methods)
@@ -10,9 +13,12 @@
  	require(nnet)
 	require(Rsolnp)
 	require(stats4)	
+	library.dynam("depmixS4", pkg, lib)
 }
 
-.Last.lib <- function(libpath) {}
+.Last.lib <- function(libpath) {
+	library.dynam.unload("depmixS4",libpath)
+}
 
 # Guess what: all generics
 
