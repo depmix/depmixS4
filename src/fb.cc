@@ -41,7 +41,7 @@ extern "C" {
 // gamma is computed as alpha*beta/sca in R (no loop needed)
 
 
-void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, 
+void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 					 double *init, double *trdens, double *dens, 
 					 double *alpha, double *beta, double *sca, double *xi) {
 		
@@ -51,39 +51,70 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes,
 		
 		int nttot=0;
 		
- 		for(int i=0; i<3; i++) {
+ 		for(int i=0; i<nc[0]; i++) {
  			nttot += ntimes[i];
- 			Rprintf("ntimes: %d \n", ntimes[i]);
  			Rprintf("nttot: %d \n", nttot);
  		}
 		
 		// 	loop over cases
-		int tt=0;
+// 		int tt=0; // main counter should run from 0 to nt-1
 		for(int cas=0; cas<nc[0]; cas++) {
 			// compute alpha1 for this case
 			double sca1=0.0;
+			matrix alpha1(ns[0],1);
+			matrix alphat(ns[0],1);
+			matrix denst(ns[0]);
 			for(int i=0; i<ns[0]; i++) {
-				alpha[tt*ns[0]+i] = init[cas*ns[0]+i]*dens[tt*ns[0]+i];
-				sca1 += alpha[tt*ns[0]+i];
+				alpha[(bt[cas]-1)*ns[0]+i] = init[cas*ns[0]+i]*dens[(bt[cas]-1)*ns[0]+i];
+				denst(i+1) = dens[(bt[cas]-1)*ns[0]+i];
+				// compute scale for alpha1
+				sca1 += alpha[(bt[cas]-1)*ns[0]+i];
+// 				Rprintf("init=%f\n",init[cas*ns[0]+i]);
+// 				Rprintf("index=%d\n",cas*ns[0]+i);
+// 				Rprintf("dens=%f\n",dens[(bt[cas]-1)*ns[0]+i]);
+// 				Rprintf("index=%d\n",(bt[cas]-1)*ns[0]+i);
 			}
-			sca[tt] = sca1;
-			for(int i=0; i<ns[0]; i++) {
-				alpha[tt*ns[0]+i] /= sca1;
-			}
-			
-			// compute scale for alpha1
-			
+			sca[(bt[cas]-1)] = 1/sca1;
 			// scale alpha1
-			
+			for(int i=0; i<ns[0]; i++) {
+				alpha[(bt[cas]-1)*ns[0]+i] /= sca1;
+				alpha1(i+1) = alpha[(bt[cas]-1)*ns[0]+i];
+			}
+			Rprintf("%d\n",bt[cas]-1);
+			denst.print();
+			alpha1.print();
+			matrix trans(ns[0],ns[0]);
 			//loop over ntimes[cas]>1
-			
-			// compute cumulative t for indexing alpha
-			if(cas>0) tt += ntimes[cas];
-			
-			Rprintf("%d\n",tt);
+			if(ntimes[cas]>0) {
+				for(int t=bt[cas]; t<et[cas]; t++) {
+					// get trans and dens values
+					for(int i=0; i<ns[0]; i++) {
+						for(int j=0; j<ns[0]; j++) {
+							trans(i+1,j+1) = trdens[(i*ns[0]+j)*nt[0]+t];
+						}
+						denst(i+1) = dens[t*ns[0]+i];
+					}
+					
+					Rprintf("%d\n",t);					
+					trans.print();
+// 					denst.print();
+
+					// compute alphat
+					alphat = had(transpose(trans)*alpha1,denst);
+					
+					// compute scale for t
+   					sca[t] = 1/(alphat.msum());
+					
+ 					for(int i=0; i<ns[0]; i++) {
+ 						alphat(i+1) *= sca[t];
+ 						alpha[t*ns[0]+i] = alphat(i+1);
+ 					}
+				}
+			}
+						
+// 			Rprintf("%d\n",tt);
 			
 		} // end cases
-		
 		
 		// (auxiliaries for) gradients from mixing proportions
 // 		matrix *xiC; xiC = new matrix[2];
@@ -92,54 +123,6 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes,
 // 		mp1[0].print();
 		
 	}
-
-	
-// //this is the actual loglikelihood function for models with covariates
-// void forwardbackward(double logl, double *init, int *linit) {
-// 	
-// 	double crit=0.0;
-// 	
-// 	crit=init[0];
-// 	// This will stop optimization when the loglikelihood is better then crit, useful for
-// 	// goodness of fit bootstrapping
-// 	Rprintf("stop crit=%f\n",crit);
-// 	
-// 	Rprintf("Starting to compute likelihood.\n");
-// 	
-// 	Rprintf("linit: %d \n", linit[0]);
-// 	
-// 	logl=0;
-// 	
-// 	Rprintf("logl: %f \n", logl);
-// 
-// 	double tmp;
-// 	
-// 	for(int i=0; i<3; i++) {
-// 		logl += init[i];
-// 		tmp = init[i];
-// 		Rprintf("init: %f \n", tmp);
-// 		Rprintf("logl: %f \n", logl);
-// 	}
-// 	
-// 	int nrcomp=models.getNrComp();
-// 	int ngroups=models.getNrGroups();
-// 	int *npars = new int[nrcomp];
-// 	int *nstates = new int[nrcomp];
-// 	int totalstates=0;
-// 	
-// 	for(int cp=0; cp<nrcomp; cp++) {
-// 		npars[cp]=models.mods[cp].getNPars();
-// 		nstates[cp]=models.mods[cp].getStates();
-// 		totalstates += nstates[cp];
-// 	}
-// 	
-// 	// (auxiliaries for) gradients from mixing proportions
-// 	matrix *mp1; mp1 = new matrix[2];
-// 	matrix *mpt; mpt = new matrix[ngroups];
-// 	matrix *mptfinal; mptfinal = new matrix[ngroups];
-		
-// }
- 
 
 
 } // end extern "C"
