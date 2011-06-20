@@ -41,7 +41,9 @@ extern "C" {
 // gamma is computed as alpha*beta/sca in R (no loop needed)
 
 
-void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, double *init, double *trdens, double *dens, double *alpha, double *beta, double *sca, double *xi) {
+void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, 
+					 double *init, double *trdens, double *dens, 
+					 double *alpha, double *beta, double *sca, double *xi) {
 		
 		Rprintf("ns=%d\n",ns[0]);
 		Rprintf("nc=%d\n",nc[0]);

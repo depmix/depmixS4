@@ -96,8 +96,8 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 			  converge <- TRUE
 			}
 		} else {
-		  # this should not really happen...
-		  if(j > 0) warning("likelihood decreased on iteration",j)
+			# this should not really happen...
+			if(j > 0 && (LL.old - LL) > tol) warning("likelihood decreased on iteration ",j)
 		}
 
 		LL.old <- LL
@@ -221,7 +221,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 			}
 		} else {
 		  # this should not really happen...
-		  if(j > 0) warning("likelihood decreased on iteration",j)
+			if(j > 0 && (LL.old - LL) > tol) warning("likelihood decreased on iteration ",j)
 		}
 		
 		LL.old <- LL
