@@ -45,84 +45,54 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 					 double *init, double *trdens, double *dens, 
 					 double *alpha, double *beta, double *sca, double *xi) {
 		
-		Rprintf("ns=%d\n",ns[0]);
-		Rprintf("nc=%d\n",nc[0]);
-		Rprintf("nt=%d\n",nt[0]);
-		
-		int nttot=0;
-		
- 		for(int i=0; i<nc[0]; i++) {
- 			nttot += ntimes[i];
- 			Rprintf("nttot: %d \n", nttot);
- 		}
-		
-		// 	loop over cases
-// 		int tt=0; // main counter should run from 0 to nt-1
-		for(int cas=0; cas<nc[0]; cas++) {
-			// compute alpha1 for this case
-			double sca1=0.0;
-			matrix alpha1(ns[0],1);
-			matrix alphat(ns[0],1);
-			matrix denst(ns[0]);
-			for(int i=0; i<ns[0]; i++) {
-				alpha[(bt[cas]-1)*ns[0]+i] = init[cas*ns[0]+i]*dens[(bt[cas]-1)*ns[0]+i];
-				denst(i+1) = dens[(bt[cas]-1)*ns[0]+i];
-				// compute scale for alpha1
-				sca1 += alpha[(bt[cas]-1)*ns[0]+i];
-// 				Rprintf("init=%f\n",init[cas*ns[0]+i]);
-// 				Rprintf("index=%d\n",cas*ns[0]+i);
-// 				Rprintf("dens=%f\n",dens[(bt[cas]-1)*ns[0]+i]);
-// 				Rprintf("index=%d\n",(bt[cas]-1)*ns[0]+i);
-			}
-			sca[(bt[cas]-1)] = 1/sca1;
-			// scale alpha1
-			for(int i=0; i<ns[0]; i++) {
-				alpha[(bt[cas]-1)*ns[0]+i] /= sca1;
-				alpha1(i+1) = alpha[(bt[cas]-1)*ns[0]+i];
-			}
-			Rprintf("%d\n",bt[cas]-1);
-			denst.print();
-			alpha1.print();
-			matrix trans(ns[0],ns[0]);
-			//loop over ntimes[cas]>1
-			if(ntimes[cas]>0) {
-				for(int t=bt[cas]; t<et[cas]; t++) {
-					// get trans and dens values
-					for(int i=0; i<ns[0]; i++) {
-						for(int j=0; j<ns[0]; j++) {
-							trans(i+1,j+1) = trdens[(i*ns[0]+j)*nt[0]+t];
-						}
-						denst(i+1) = dens[t*ns[0]+i];
+	// compute forward variables
+	// loop over cases
+	for(int cas=0; cas<nc[0]; cas++) {
+		// compute alpha1 for this case
+		double sca1=0.0;
+		matrix alpha1(ns[0],1);
+		matrix denst(ns[0]);
+		for(int i=0; i<ns[0]; i++) {
+			alpha1(i+1) = init[cas*ns[0]+i]*dens[(bt[cas]-1)*ns[0]+i];
+			denst(i+1) = dens[(bt[cas]-1)*ns[0]+i];
+			// compute scale for alpha1
+			sca1 += alpha1(i+1);
+		}
+		sca[(bt[cas]-1)] = 1/sca1;
+		// scale alpha1 and copy to alpha
+		for(int i=0; i<ns[0]; i++) {
+			alpha1(i+1) *= sca[(bt[cas]-1)];
+			alpha[(bt[cas]-1)*ns[0]+i] = alpha1(i+1);
+		}
+		matrix alphat(ns[0],1);
+		matrix trans(ns[0],ns[0]);
+		// loop over ntimes[cas]>1
+		if(ntimes[cas]>0) {
+			for(int t=bt[cas]; t<et[cas]; t++) {
+				// get trans and dens values
+				for(int i=0; i<ns[0]; i++) {
+					for(int j=0; j<ns[0]; j++) {
+						trans(i+1,j+1) = trdens[(i*ns[0]+j)*nt[0]+t-1]; // A_t
 					}
-					
-					Rprintf("%d\n",t);					
-					trans.print();
-// 					denst.print();
-
-					// compute alphat
-					alphat = had(transpose(trans)*alpha1,denst);
-					
-					// compute scale for t
-   					sca[t] = 1/(alphat.msum());
-					
- 					for(int i=0; i<ns[0]; i++) {
- 						alphat(i+1) *= sca[t];
- 						alpha[t*ns[0]+i] = alphat(i+1);
- 					}
+					denst(i+1) = dens[t*ns[0]+i]; //B_t+1
+				}					
+				// compute alphat
+				alphat = had(transpose(trans)*alpha1,denst);// A_t*alpha_t*B_t+1
+				// compute scale for t
+				sca[t] = 1/(alphat.msum());
+				// scale alphat values
+				for(int i=0; i<ns[0]; i++) {
+					alphat(i+1) *= sca[t];
+					alpha[t*ns[0]+i] = alphat(i+1);
 				}
+				alpha1 = alphat;
 			}
-						
-// 			Rprintf("%d\n",tt);
-			
-		} // end cases
-		
-		// (auxiliaries for) gradients from mixing proportions
-// 		matrix *xiC; xiC = new matrix[2];
-// 		mp1[0](1)=3.7;
-// 		mp1[1](1)=1.6;	
-// 		mp1[0].print();
-		
-	}
-
+		}			
+	} // end cases
+	
+	// compute backward variables and xi
+	
+	
+}
 
 } // end extern "C"
