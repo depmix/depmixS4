@@ -92,11 +92,46 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 		// compute backward variables and xi
 		matrix betatp1(ns[0]);
 		matrix betat(ns[0]);
+// 		Rprintf("et[cas]: %d \n",et[cas]);		
+// 		Rprintf("sca et[cas]: %f \n",sca[et[cas]-1]);
 		// compute initial beta, ie for t=T (for each case)
 		for(int i=0; i<ns[0]; i++) {
-			betatp1[et[cas],i] <- sca[et[cas]]
+			betatp1(i+1) = sca[et[cas]-1];
 		}
-		betatp1.print();
+// 		betatp1.print();
+		for(int i=0; i<ns[0]; i++) {
+			beta[(et[cas]-1)*ns[0]+i] = betatp1(i+1);
+		}
+ 		if(ntimes[cas]>1) {
+			// loop from T-1 to 1 for each case
+ 			for(int t=(et[cas]-1); t>=bt[cas]; t--) {
+// 				Rprintf("t: %d \n", t);
+				for(int i=0; i<ns[0]; i++) {
+					for(int j=0; j<ns[0]; j++) {
+						trans(i+1,j+1) = trdens[(i*ns[0]+j)*nt[0]+t-1]; // A_t
+					}
+  					denst(i+1) = dens[t*ns[0]+i]; //B_t+1
+//  				if(stationary) beta[i,] <-(B[i+1,]*beta[i+1,])%*%A[1,,]*sca[i]
+				}
+//  				transpose(trans).print();
+//  				denst.print();
+// 				Rprintf("sca t: %f \n",sca[t-1]);
+				betat = trans*had(denst,betatp1)*sca[t-1];
+// 				betat.print();
+				// store betat somewhere
+				for(int i=0; i<ns[0]; i++) {
+					beta[(t-1)*ns[0]+i] = betat(i+1);
+				}
+				betatp1 = betat;
+ 			}
+ 			
+ 			
+//  			for(i in bt[case]:(et[case]-1)) {
+//  				if(stationary) xi[i,,] <- rep(alpha[i,],each=ns)*(B[i+1,]*beta[i+1,]*A[1,,])
+//  				else xi[i,,] <- rep(alpha[i,],each=ns)*(B[i+1,]*beta[i+1,]*A[i,,])
+// 			}
+ 		}
+		
 		
 // 		R-code for the backwards/xi loop
 // 		if(ntimes[case]>1) {
