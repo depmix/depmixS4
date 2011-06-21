@@ -87,11 +87,31 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 				}
 				alpha1 = alphat;
 			}
-		}			
+		}
+		
+		// compute backward variables and xi
+		matrix betatp1(ns[0]);
+		matrix betat(ns[0]);
+		// compute initial beta, ie for t=T (for each case)
+		for(int i=0; i<ns[0]; i++) {
+			betatp1[et[cas],i] <- sca[et[cas]]
+		}
+		betatp1.print();
+		
+// 		R-code for the backwards/xi loop
+// 		if(ntimes[case]>1) {
+// 			for(i in (et[case]-1):bt[case]) {
+// 				if(stationary) beta[i,] <-(B[i+1,]*beta[i+1,])%*%A[1,,]*sca[i]
+// 				else beta[i,] <-(B[i+1,]*beta[i+1,])%*%A[i,,]*sca[i]
+// 			}
+// 			
+// 			for(i in bt[case]:(et[case]-1)) {
+// 				if(stationary) xi[i,,] <- rep(alpha[i,],each=ns)*(B[i+1,]*beta[i+1,]*A[1,,])
+// 				else xi[i,,] <- rep(alpha[i,],each=ns)*(B[i+1,]*beta[i+1,]*A[i,,])
+// 			}
+// 		}
+				
 	} // end cases
-	
-	// compute backward variables and xi
-	
 	
 }
 
