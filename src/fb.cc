@@ -1,7 +1,5 @@
 #include "fb.h"
 
-// #include "matrix.h"
-
 extern "C" {
 
 // 	# Forward-Backward algorithm (used in Baum-Welch)
@@ -32,7 +30,6 @@ extern "C" {
 // 4) sca: nt vector
 
 // gamma is computed as alpha*beta/sca in R (no loop needed)
-
 
 void forwardbackward(int *hom, int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 					 double *init, double *trdens, double *dens, 
