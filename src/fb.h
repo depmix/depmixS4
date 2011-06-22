@@ -15,7 +15,7 @@ extern "C" {
 #include <Rmath.h>
 
 // criterion for stopping optimization, used in bootstrapping
-void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et, 
+void forwardbackward(int *hom, int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et, 
 					 double *init, double *trdens, double *dens, 
 					 double *alpha, double *beta, double *sca, double *xi);
 

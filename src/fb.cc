@@ -24,6 +24,7 @@ extern "C" {
 	
 
 // inputs are:
+// 0) hom: whether the transition probs are homogeneous or not
 // a) ns: the number of states
 // b) nc: the number of cases
 // c) nt: the number of rows of data
@@ -41,7 +42,7 @@ extern "C" {
 // gamma is computed as alpha*beta/sca in R (no loop needed)
 
 
-void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
+void forwardbackward(int *hom, int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 					 double *init, double *trdens, double *dens, 
 					 double *alpha, double *beta, double *sca, double *xi) {
 		
@@ -66,11 +67,10 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 		if(ntimes[cas]>0) {
 			for(int t=bt[cas]; t<et[cas]; t++) {				
 				// compute alphat
-// 				sca[t] = 0.0;
 				for(int j=0; j<ns[0]; j++) {
-// 					alpha[t*ns[0]+j] = 0.0;
 					for(int i=0; i<ns[0]; i++) {
-						alpha[t*ns[0]+j] += trdens[(i*ns[0]+j)*nt[0]+t-1]*alpha[(t-1)*ns[0]+i];
+						if(hom[0]==1) alpha[t*ns[0]+j] += trdens[i*ns[0]+j]*alpha[(t-1)*ns[0]+i];
+						else alpha[t*ns[0]+j] += trdens[(i*ns[0]+j)*nt[0]+t-1]*alpha[(t-1)*ns[0]+i];
 					}
 					alpha[t*ns[0]+j] *= dens[t*ns[0]+j];
 					sca[t] += alpha[t*ns[0]+j];
@@ -94,9 +94,9 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 			// loop from T-1 to 1 for each case
  			for(int t=(et[cas]-1); t>=bt[cas]; t--) {				
 				for(int i=0; i<ns[0]; i++) {
-// 					beta[(t-1)*ns[0]+i] = 0.0;
 					for(int j=0; j<ns[0]; j++) {
-						beta[(t-1)*ns[0]+i] += trdens[(i*ns[0]+j)*nt[0]+t-1]*dens[t*ns[0]+j]*beta[t*ns[0]+j];
+						if(hom[0]==1) beta[(t-1)*ns[0]+i] += trdens[i*ns[0]+j]*dens[t*ns[0]+j]*beta[t*ns[0]+j];
+						else beta[(t-1)*ns[0]+i] += trdens[(i*ns[0]+j)*nt[0]+t-1]*dens[t*ns[0]+j]*beta[t*ns[0]+j];
 					}
 					beta[(t-1)*ns[0]+i] *= sca[t-1];
 				}
@@ -106,7 +106,8 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 			for(int t=bt[cas]; t<et[cas]; t++) {
 				for(int i=0; i<ns[0]; i++) {
 					for(int j=0; j<ns[0]; j++) {
-						xi[(i*ns[0]+j)*nt[0]+t-1] = alpha[(t-1)*ns[0]+i]*trdens[(i*ns[0]+j)*nt[0]+t-1]*dens[t*ns[0]+j]*beta[t*ns[0]+j];
+						if(hom[0]==1) xi[(i*ns[0]+j)*nt[0]+t-1] = alpha[(t-1)*ns[0]+i]*trdens[i*ns[0]+j]*dens[t*ns[0]+j]*beta[t*ns[0]+j];
+						else xi[(i*ns[0]+j)*nt[0]+t-1] = alpha[(t-1)*ns[0]+i]*trdens[(i*ns[0]+j)*nt[0]+t-1]*dens[t*ns[0]+j]*beta[t*ns[0]+j];
 					}
 				}
 			}			
