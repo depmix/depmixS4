@@ -50,21 +50,21 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 	for(int cas=0; cas<nc[0]; cas++) {
 		// compute alpha1 for this case
 		double sca1=0.0;
-		matrix alpha1(ns[0],1);
-		matrix denst(ns[0]);
-		for(int i=0; i<ns[0]; i++) {
-			alpha1(i+1) = init[cas*ns[0]+i]*dens[(bt[cas]-1)*ns[0]+i];
-			denst(i+1) = dens[(bt[cas]-1)*ns[0]+i];
-			// compute scale for alpha1
-			sca1 += alpha1(i+1);
-		}
-		
-		sca[(bt[cas]-1)] = 1/sca1;
-		// scale alpha1 and copy to alpha
-		for(int i=0; i<ns[0]; i++) {
-			alpha1(i+1) *= sca[(bt[cas]-1)];
-			alpha[(bt[cas]-1)*ns[0]+i] = alpha1(i+1);
-		}
+// 		matrix alpha1(ns[0],1);
+ 		matrix denst(ns[0]);
+// 		for(int i=0; i<ns[0]; i++) {
+// 			alpha1(i+1) = init[cas*ns[0]+i]*dens[(bt[cas]-1)*ns[0]+i];
+// 			denst(i+1) = dens[(bt[cas]-1)*ns[0]+i];
+// 			// compute scale for alpha1
+// 			sca1 += alpha1(i+1);
+// 		}
+// 		
+// 		sca[(bt[cas]-1)] = 1/sca1;
+// 		// scale alpha1 and copy to alpha
+// 		for(int i=0; i<ns[0]; i++) {
+// 			alpha1(i+1) *= sca[(bt[cas]-1)];
+// 			alpha[(bt[cas]-1)*ns[0]+i] = alpha1(i+1);
+// 		}
 		
 		// compute alpha1 without intervening matrices
 		sca1 = 0.0;
@@ -79,32 +79,63 @@ void forwardbackward(int *ns, int *nc, int *nt, int *ntimes, int *bt, int *et,
 			alpha[(bt[cas]-1)*ns[0]+i] *= sca[(bt[cas]-1)];
 		}
 		
-		matrix alphat(ns[0],1);
-		matrix trans(ns[0],ns[0]);
-		// loop over ntimes[cas]>1
+ 		matrix alphat(ns[0],1);
+ 		matrix trans(ns[0],ns[0]);
+// 		// loop over ntimes[cas]>1
+// 		if(ntimes[cas]>0) {
+// 			for(int t=bt[cas]; t<et[cas]; t++) {
+// 				// get trans and dens values
+// 				for(int i=0; i<ns[0]; i++) {
+// 					for(int j=0; j<ns[0]; j++) {
+// 						trans(i+1,j+1) = trdens[(i*ns[0]+j)*nt[0]+t-1]; // A_t
+// 					}
+// 					denst(i+1) = dens[t*ns[0]+i]; //B_t+1
+// 				}					
+// 				// compute alphat
+// 				alphat = had(transpose(trans)*alpha1,denst);// A_t*alpha_t*B_t+1
+// 				// compute scale for t
+// 				sca[t] = 1/(alphat.msum());
+// 				// scale alphat values
+// 				for(int i=0; i<ns[0]; i++) {
+// 					alphat(i+1) *= sca[t];
+// 					alpha[t*ns[0]+i] = alphat(i+1);
+// 				}
+// 				alpha1 = alphat;
+// 			}
+// 		}
+		
+		// compute alphat without intervening matrices
+		
 		if(ntimes[cas]>0) {
 			for(int t=bt[cas]; t<et[cas]; t++) {
 				// get trans and dens values
-				for(int i=0; i<ns[0]; i++) {
-					for(int j=0; j<ns[0]; j++) {
-						trans(i+1,j+1) = trdens[(i*ns[0]+j)*nt[0]+t-1]; // A_t
-					}
-					denst(i+1) = dens[t*ns[0]+i]; //B_t+1
-				}					
+// 				for(int i=0; i<ns[0]; i++) {
+// 					for(int j=0; j<ns[0]; j++) {
+// 						trans(i+1,j+1) = trdens[(i*ns[0]+j)*nt[0]+t-1]; // A_t
+// 					}
+// 					denst(i+1) = dens[t*ns[0]+i]; //B_t+1
+// 				}					
 				// compute alphat
-				alphat = had(transpose(trans)*alpha1,denst);// A_t*alpha_t*B_t+1
-				// compute scale for t
-				sca[t] = 1/(alphat.msum());
+				sca[t] = 0.0;
+				for(int j=0; j<ns[0]; j++) {
+					alpha[t*ns[0]+j] = 0.0;
+					for(int i=0; i<ns[0]; i++) {
+						alpha[t*ns[0]+j] += trdens[(i*ns[0]+j)*nt[0]+t-1]*alpha[(t-1)*ns[0]+i];
+					}
+					alpha[t*ns[0]+j] *= dens[t*ns[0]+j];
+					sca[t] += alpha[t*ns[0]+j];
+				}
+				sca[t] = 1/(sca[t]);				
 				// scale alphat values
 				for(int i=0; i<ns[0]; i++) {
-					alphat(i+1) *= sca[t];
-					alpha[t*ns[0]+i] = alphat(i+1);
+					alpha[t*ns[0]+i] *= sca[t];
 				}
-				alpha1 = alphat;
 			}
 		}
 		
-		// alphat without intervening matrices
+		
+		
+		
 		
 		
 		// compute backward variables and xi
