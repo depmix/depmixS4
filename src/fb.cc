@@ -1,26 +1,18 @@
 #include "fb.h"
 
-#include "matrix.h"
+// #include "matrix.h"
 
 extern "C" {
 
 // 	# Forward-Backward algorithm (used in Baum-Welch)
 // 	# Returns alpha, beta, and full data likelihood
 // 	
-// 	# NOTE THE CHANGE IN FROM ROW TO COLUMN SUCH THAT TRANSPOSING A IS NOT NECCESSARY ANYMORE
-// 	# IN COMPUTING ALPHA AND BETA BUT IS NOW NECCESSARY IN COMPUTING XI
 // 	# A = T*K*K matrix with transition probabilities, from row to column!!!!!!!
 // 	# B = T*K matrix with elements ab_{ij} = P(y_i|s_j)
 // 	# init = K vector with initial probabilities
 // 
 // 	# NOTE: to prevent underflow, alpha and beta are scaled, using sca
-// 	
 // 	# NOTE: xi[t,i,j] = P(S[t] = j & S[t+1] = i) !!!NOTE the order of i and j!!!
-	
-// 	fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE) {
-// 
-// 	fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object), 
-// 			stationary=object@stationary,return.all=return.all)
 	
 
 // inputs are:
