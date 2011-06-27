@@ -44,7 +44,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		}
 		
 		# initial expectation
-		fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+		fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
 		LL <- fbo$logLike
 		
 		if(is.nan(LL)) stop("Cannot find suitable starting values; please provide them.")

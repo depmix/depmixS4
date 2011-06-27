@@ -31,6 +31,8 @@ setMethod("fit",
 			object <- em(object,maxit=emcontrol$maxit,tol=emcontrol$tol,crit=emcontrol$crit,random.start=emcontrol$random.start,verbose=verbose,...)
 		}
 		
+		if(!(method %in% c("EM","donlp","rsolnp"))) stop("'method' argument invalid; should be one of 'EM', 'rsolnp', 'donlp'.")
+		
 		if(method=="donlp"||method=="rsolnp") {
 			
 			# check feasibility of starting values
