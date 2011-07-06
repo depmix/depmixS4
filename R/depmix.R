@@ -51,25 +51,25 @@ setMethod("mix", signature(response = "ANY"), function(response,
 #
 
 setMethod("depmix", signature(response = "ANY"), function(response, 
-    data = NULL, nstates, transition = ~1, family = gaussian(), 
-    prior = ~1, initdata = NULL, respstart = NULL, trstart = NULL, 
-    instart = NULL, ntimes = NULL, ...) {
+		data = NULL, nstates, transition = ~1, family = gaussian(), 
+		prior = ~1, initdata = NULL, respstart = NULL, trstart = NULL, 
+		instart = NULL, ntimes = NULL, ...) {
     
-    if (is.null(data)) {
-        if (is.null(ntimes)) 
-            stop("'ntimes' must be provided if not in the data")
-    } else {
-        if (is.null(attr(data, "ntimes"))) {
-            if (is.null(ntimes)) 
-                ntimes <- nrow(data)
-        } else {
-            ntimes <- attr(data, "ntimes")
-        }
-        if (sum(ntimes) != nrow(data)) 
-            stop("'ntimes' and data do not match")
-    }
-    
-    # make response models
+	if(is.null(data)) {
+		if(is.null(ntimes)) stop("'ntimes' must be provided if not in the data")
+	} else {
+		if(is.null(attr(data, "ntimes"))) {
+			if (is.null(ntimes)) ntimes <- nrow(data)
+		} else {
+			ntimes <- attr(data, "ntimes")
+		}
+		
+		if (sum(ntimes) != nrow(data)) stop("'ntimes' and data do not match")
+	}
+	
+	if(nstates==1&transition!=~1) {stop("1-state model can not have transition covariate")}
+	
+	# make response models
     response <- makeResponseModels(response = response, data = data, 
         nstates = nstates, family = family, values = respstart)
     
