@@ -28,6 +28,7 @@ setMethod("fit",
 		}
 		
 		if(method=="EM") {
+			if(!(emcontrol$crit %in% c("absolute","relative"))) stop("'crit' argument to em.control not recognized")
 			object <- em(object,maxit=emcontrol$maxit,tol=emcontrol$tol,crit=emcontrol$crit,random.start=emcontrol$random.start,verbose=verbose,...)
 		}
 		
@@ -36,7 +37,7 @@ setMethod("fit",
 		if(method=="donlp"||method=="rsolnp") {
 			
 			# check feasibility of starting values
-			if(is.nan(logLik(object))) stop("Initial model infeasible, log likelihood is NaN; please provide better starting values. ")
+			if(is.nan(logLik(object))) stop("Initial model infeasible, log likelihood is 'NaN'; please provide better starting values. ")
 			
 			# determine which parameters are fixed
  			if(fi) {
