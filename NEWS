@@ -1,4 +1,12 @@
 
+Changes in depmixS4 version 1.1-0
+
+  o Corrected a typo in the vignette in Equation 1; the first occurrence 
+    of S read S_t instead of S_1 (thanks to Peng Yu for reporting this). 
+
+  o 
+
+
 Changes in depmixS4 version 1.0-4
 
   o Added examples of the use of ntimes argument on ?depmix and ?fit 
