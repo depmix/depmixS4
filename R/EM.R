@@ -91,7 +91,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		}
 		
 		if(LL >= LL.old) {
-		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && (LL.old - LL)/LL.old  < tol)) {
+		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && (LL - LL.old)/abs(LL.old)  < tol)) {
 			  cat("iteration",j,"logLik:",LL,"\n")
 			  converge <- TRUE
 			}
@@ -214,8 +214,8 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 				
 		if(verbose&((j%%5)==0)) cat("iteration",j,"logLik:",LL,"\n")
 		
-		if( (LL >= LL.old&j>25)) {
-		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && abs((LL.old - LL)/LL.old)  < tol)) {
+		if( (LL >= LL.old)) {
+		  if((crit == "absolute" &&  LL - LL.old < tol) || (crit == "relative" && (LL - LL.old)/abs(LL.old)  < tol)) {
 			  cat("iteration",j,"logLik:",LL,"\n")
 			  converge <- TRUE
 			}
