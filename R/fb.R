@@ -22,18 +22,6 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE) 
 	nt <- nrow(B)	
 	ns <- ncol(init)
 	
-# 	print(head(B))
-# 	
-# 	bin <- array(0,dim=dim(B)[c(1,3)])
-# 	res <- .C("ddens",
-# 		as.double(B),
-# 		out=as.double(bin),
-# 		dim=dim(B),
-# 		package="depmixS4")[c("out")]
-# 	B <- matrix(res$out,nc=ns,byrow=TRUE)
-# 	
-# 	print(head(B))
-	
 	B <- apply(B,c(1,3),prod)
 	
 	if(is.null(ntimes)) ntimes <- nt
@@ -45,8 +33,9 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,stationary=TRUE,useC=TRUE) 
  	if(useC) {
 		
 		alpha <- matrix(0,ncol=ns,nrow=nt)
-		beta <- matrix(0,ncol=ns,nrow=nt)
 		sca <- rep(0,nt)
+		
+		beta <- matrix(0,ncol=ns,nrow=nt)
 		xi <- array(0,dim=c(nt,ns,ns))
 		
 		res <- .C("forwardbackward",

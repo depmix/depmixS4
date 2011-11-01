@@ -1,11 +1,19 @@
 
 Changes in depmixS4 version 1.1-0
+  
+  Major changes
+  
+  o The main loop computing the forward and backward variables for use in 
+    the EM algorithm is now implemented in C. Depending on model specifics 
+    this results in a 2-4 fold speed increase when fitting models.
 
+  o The Changes for each release (in the NEWS file) is now split into two 
+    sections: Major and Minor changes
+
+  Minor changes
+  
   o Corrected a typo in the vignette in Equation 1; the first occurrence 
     of S read S_t instead of S_1 (thanks to Peng Yu for reporting this). 
-
-  o 
-
 
 Changes in depmixS4 version 1.0-4
 
