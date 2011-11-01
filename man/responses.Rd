@@ -137,7 +137,8 @@ brief description of these here.}
 	# row can be different
 	dt <- data.frame(y1=c(0,1,1,2,4,5),y2=c(1,0,1,0,1,0),y3=c(4,4,3,2,1,1))
 	m2 <- mix(cbind(y1,y2,y3)~1,data=dt,ns=2,family=multinomial("identity"))
-	fm2 <- summary(fm2)
+	fm2 <- fit(m2)
+	summary(fm2)
 	
 	# multivariate normal response model
 	mn <- c(1,2,3)
