@@ -7,12 +7,6 @@
 # version of forward backward routine
 
 .onLoad <- function(lib, pkg) { 
-	require(stats)
-	require(methods)
-	require(MASS)
- 	require(nnet)
-	require(Rsolnp)
-	require(stats4)	
 	library.dynam("depmixS4", pkg, lib)
 }
 
