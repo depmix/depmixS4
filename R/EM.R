@@ -2,6 +2,15 @@
 # Maarten Speekenbrink 23-3-2008
 # 
 
+rdirichlet <- function(n, alpha) {
+  # taken from gtools...
+    l <- length(alpha)
+    x <- matrix(rgamma(l * n, alpha), ncol = l, byrow = TRUE)
+    sm <- x %*% rep(1, l)
+    x/as.vector(sm)
+}
+
+
 em <- function(object,...) {
 	if(!is(object,"mix")) stop("object is not of class '(dep)mix'")
 	call <- match.call()
@@ -31,8 +40,10 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 	if(random.start) {
 				
 		nr <- sum(ntimes(object))
-		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
-		gamma <- gamma/rowSums(gamma)
+		#gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
+		#gamma <- matrix(rbeta(nr*ns,alpha=.1,beta=.1),nrow=nr,ncol=ns)
+		gamma <- rdirichlet(nr,alpha=rep(.1,ns))
+		#gamma <- gamma/rowSums(gamma)
 		LL <- -1e10
 		
 		for(i in 1:ns) {
@@ -143,8 +154,9 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 	if(random.start) {
 				
 		nr <- sum(ntimes(object))
-		gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
-		gamma <- gamma/rowSums(gamma)
+		#gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
+		#gamma <- gamma/rowSums(gamma)
+		gamma <- rdirichlet(nr,alpha=rep(.1,ns))
 		LL <- -1e10
 		
 		for(i in 1:ns) {
