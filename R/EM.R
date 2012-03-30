@@ -42,7 +42,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		nr <- sum(ntimes(object))
 		#gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
 		#gamma <- matrix(rbeta(nr*ns,alpha=.1,beta=.1),nrow=nr,ncol=ns)
-		gamma <- rdirichlet(nr,alpha=rep(.1,ns))
+		gamma <- rdirichlet(nr,alpha=rep(.01,ns))
 		#gamma <- gamma/rowSums(gamma)
 		LL <- -1e10
 		
@@ -156,7 +156,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		nr <- sum(ntimes(object))
 		#gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
 		#gamma <- gamma/rowSums(gamma)
-		gamma <- rdirichlet(nr,alpha=rep(.1,ns))
+		gamma <- rdirichlet(nr,alpha=rep(.01,ns))
 		LL <- -1e10
 		
 		for(i in 1:ns) {
