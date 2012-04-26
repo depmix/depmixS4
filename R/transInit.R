@@ -20,6 +20,7 @@ setMethod("transInit",
 			mf[[1]] <- as.name("model.frame")
 			mf <- eval(mf, parent.frame())
 			x <- model.matrix(attr(mf, "terms"),mf)
+			if(any(is.na(x))) stop("'depmixS4' does not currently handle covariates with missing data.")
 		}
 		y <- matrix(1,ncol=1) # y is not needed in the transition and init models
 		parameters <- list()

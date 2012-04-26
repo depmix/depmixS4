@@ -1,4 +1,9 @@
+Changes in depmixS4 version 1.1-2
 
+Major changes
+  
+  o Missing values for responses are now allowed.
+    
 Changes in depmixS4 version 1.1-0
   
   Major changes
