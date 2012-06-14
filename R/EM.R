@@ -10,6 +10,18 @@ rdirichlet <- function(n, alpha) {
     x/as.vector(sm)
 }
 
+which.is.max <- function(x) {
+    # taken from MASS
+    y <- seq_along(x)[x == max(x)]
+    if(length(y) > 1L) sample(y, 1L) else y
+}
+
+
+ind.max <- function(x) {
+    out <- rep(0,length(x))
+    out[which.is.max(x)] <- 1
+    out
+}
 
 em <- function(object,...) {
 	if(!is(object,"mix")) stop("object is not of class '(dep)mix'")
@@ -24,7 +36,9 @@ em <- function(object,...) {
 }
 
 # em for lca and mixture models
-em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,...) {
+em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,classification=c("soft","hard"),...) {
+	
+	clsf <- match.arg(classification)
 	
 	if(!is(object,"mix")) stop("object is not of class 'mix'")
 		
@@ -40,15 +54,17 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 	if(random.start) {
 				
 		nr <- sum(ntimes(object))
-		#gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
-		#gamma <- matrix(rbeta(nr*ns,alpha=.1,beta=.1),nrow=nr,ncol=ns)
 		gamma <- rdirichlet(nr,alpha=rep(.01,ns))
-		#gamma <- gamma/rowSums(gamma)
+		
+		if(clsf == "hard") {
+		    gamma <- t(apply(gamma,1,ind.max))
+		}
+
 		LL <- -1e10
 		
 		for(i in 1:ns) {
 			for(k in 1:nresp(object)) {
-				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=gamma[,i])
+			    object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=gamma[,i])
 				# update dens slot of the model
 				object@dens[,k,i] <- dens(object@response[[i]][[k]])
 			}
@@ -76,6 +92,10 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		# maximization
 		
 		# should become object@prior <- fit(object@prior)
+		
+		if(clsf == "hard") {
+		    gamma <- t(apply(gamma,1,ind.max))
+		}
 		object@prior@y <- gamma[bt,,drop=FALSE]
 		object@prior <- fit(object@prior, w=NULL,ntimes=NULL)
 		object@init <- dens(object@prior)
@@ -157,6 +177,9 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		#gamma <- matrix(runif(nr*ns,min=.0001,max=.9999),nrow=nr,ncol=ns)
 		#gamma <- gamma/rowSums(gamma)
 		gamma <- rdirichlet(nr,alpha=rep(.01,ns))
+		if(clsf == "hard") {
+		    gamma <- t(apply(gamma,1,ind.max))
+		}
 		LL <- -1e10
 		
 		for(i in 1:ns) {
