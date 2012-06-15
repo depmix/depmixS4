@@ -157,9 +157,13 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 }
 
 # em for hidden markov models
-em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,...) {
+em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE, classification=c("soft","hard"),...) {
 	
 	if(!is(object,"depmix")) stop("object is not of class 'depmix'")
+	
+	clsf <- match.arg(classification)
+	
+	clsf="soft"
 	
 	ns <- nstates(object)
 	
