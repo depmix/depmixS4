@@ -17,7 +17,7 @@ lystig <- function(init,A,B,ntimes=NULL,stationary=TRUE,na.allow=TRUE) {
 	# A = K*K matrix with transition probabilities, from column to row !!!!!!!
 	# change to T*K*K
     
-    if(na.allow) B <- replace(B,is.na(B),1)
+	if(na.allow) B <- replace(B,is.na(B),1)
 	B <- apply(B,c(1,3),prod)
 
 	# B = T*K*nresp matrix with elements ab_{tij} = P(y_t_i|s_j)
