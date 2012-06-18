@@ -10,7 +10,7 @@ setMethod("transInit",
 	signature(formula="formula"),
 	function(formula,nstates,data=NULL,family=multinomial(),pstart=NULL,fixed=NULL,prob=TRUE, ...) {
 		call <- match.call()
-		if(formula==formula(~1)) { # &is.null(data) removed this in the condition as it 
+		if(formula==formula(~1) &is.null(data)) { # &is.null(data) removed this in the condition as it 
 			# creates the wrong dimension for the dens function when data is used (but not needed)
 			x <- matrix(1,ncol=1)
 		} else {
