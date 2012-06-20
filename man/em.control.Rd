@@ -8,7 +8,7 @@
 
 \usage{
 	
-	em.control(maxit = 500, tol = 1e-08, crit = "relative", random.start = TRUE, classification = c("soft","hard"))
+	em.control(maxit = 500, tol = 1e-08, crit = "relative", random.start = TRUE)
 	
 }
 
@@ -23,9 +23,6 @@
   
 	\item{random.start}{This is used for a (limited) random
 	initialization of the parameters. See Details.}
-	
-	\item{classification}{Type of classification to states
-	used. See Details.}
 	
 }
 
@@ -54,14 +51,6 @@ chosen at zero and one, the initialization is similar to that used in
 \code{kmeans}.  Random initialization is useful when no initial parameters can be
 given to distinguish between the states.  It is also useful for repeated
 estimation from different starting values.
-
-Argument \code{classification} is used to choose either soft (default) or
-hard classification to states. When using soft classification, observations
-are assigned to states with a weight equal to the posterior probability of
-the state. When using hard classification, observations are assigned to states
-according to the maximum a posteriori (MAP) states (i.e., each observation
-is assigned to one state, which is determined by the Viterbi algorithm in the
-case of \code{depmix} models).
 
 }
 
