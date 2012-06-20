@@ -40,8 +40,8 @@ Various methods for \code{depmix} and \code{mix} objects.
 
 \usage{
 	
-	\S4method{logLik}{depmix}(object,method="lystig")
-	\S4method{logLik}{mix}(object,method="lystig")
+	\S4method{logLik}{depmix}(object,method="fb")
+	\S4method{logLik}{mix}(object,method="fb")
 	
 	\S4method{nobs}{depmix}(object, ...)
 	\S4method{nobs}{mix}(object, ...)

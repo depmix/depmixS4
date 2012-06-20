@@ -28,7 +28,7 @@
 	(slightly) modified version of \cite{Visser+Speekenbrink:2010},
 	published in the \emph{Journal of Statistical Software}.  Please
 	refer to that article when using \pkg{depmixS4}.  The current
-	version is 1.1-1; the version history and changes can be found in
+	version is 1.2-0; the version history and changes can be found in
 	the NEWS file of the package. Below, the major versions are listed 
 	along with the most noteworthy changes. 
 
@@ -76,6 +76,8 @@ library("depmixS4")
 \section*{Version history}
 
 \begin{description}
+		\item[1.2-0] Added support for missing data, see 
+		section~\ref{sec:missingdata}.
 		\item[1.1-0] Speed improvements due to writing the main loop in C code.
 		\item[1.0-0] First release with this vignette, a modified version 
 		of the paper in the Journal of Statistical Software. 
@@ -133,18 +135,20 @@ series data, for say $T>100$, it can also handle the limit case when
 $T=1$.  In this case, there are no time dependencies between observed
 data and the model reduces to a finite mixture or latent class model.
 While there are specialized packages to deal with mixture data, as far
-as we know these don't allow the inclusion of covariates on the prior
+as we know these do not allow the inclusion of covariates on the prior
 probabilities of class membership.  The possibility to estimate the
 effects of covariates on prior and transition probabilities is a
-distinguishing feature of \pkg{depmixS4}.
-In Section~\ref{sec:2}, we provide an outline of the model and likelihood equations.
+distinguishing feature of \pkg{depmixS4}.  In
+Section~\ref{sec:outline}, we provide an outline of the model and
+likelihood equations.
 
-The \pkg{depmixS4} package is implemented using the \proglang{R} system
-for statistical computing \citep{R2010} and is available from the
-Comprehensive \proglang{R} Archive Network at \url{http://CRAN.R-project.org/package=depmixS4}.
+The \pkg{depmixS4} package is implemented using the \proglang{R}
+system for statistical computing \citep{R2010} and is available from
+the Comprehensive \proglang{R} Archive Network at
+\url{http://CRAN.R-project.org/package=depmixS4}.
 
 
-\section{The dependent mixture model} \label{sec:2}
+\section{The dependent mixture model} \label{sec:outline}
 
 The data considered here have the general form $\vc{O}_{1:T}=
 (O_{1}^{1}, \ldots, O_{1}^{m}$, $O_{2}^{1}, \ldots, O_{2}^{m}$,
@@ -346,7 +350,7 @@ direct optimization using package \pkg{Rsolnp}
 linear (in)equality constraints (and optionally also non-linear
 constraints).
 
-\subsection[Missing data]{Missing data}\label{missingdata}
+\subsection[Missing data]{Missing data}\label{sec:missingdata}
 
 Missing data can be dealt with straightforwardly in computing the
 likelihood using the forward recursion in

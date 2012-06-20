@@ -4,7 +4,7 @@ FITTING HIDDEN MARKOV MODELS IN R
 depmixS4 provides a framework for specifying and fitting hidden Markov
 models.  The observation densities use an interface to the glm
 distributions, most of which are now implemented.  The vignette that
-accompanies the package has a table with availabel response distributions
+accompanies the package has a table with available response distributions
 Besides these, observations can be modelled using the multinomial
 distribution with identity or logistic link function.  The latter provides
 functionality for multinomial logistic responses with covariates.  The
