@@ -43,7 +43,7 @@ setMethod("GLMresponse",
 			# FIX ME
 			y <- model.response(mf)
 			if(NCOL(y) == 1) {
-				if(is.factor(y)) y <- as.matrix(as.numeric(as.numeric(y)==1)) else {
+				if(is.factor(y)) y <- as.matrix(as.numeric(as.numeric(y)!=1)) else { # 21/06/12 changed this from "==" to "!=" in line with glm
 					if(!is.numeric(y)) stop("model response not valid for binomial model")
 					if(sum(y %in% c(0,1)) != length(y)) stop("model response not valid for binomial model")
 					y <- as.matrix(y)

@@ -251,6 +251,14 @@ fmod5 <- fit(mod5)
 # check the likelihood ratio; adding age significantly improves the goodness-of-fit
 llratio(fmod5,fmod4)
 
+# instead of the normal likelihood, we can also maximise the "classification" likelihood
+# this uses the maximum a posteriori state sequence to assign observations to states
+# and to compute initial and transition probabilities. 
+
+fmod1b <- fit(mod1,emcontrol=em.control(classification="hard"))
+fmod1b # to see the logLik and optimization information
+
+
 }
 
 \author{Ingmar Visser & Maarten Speekenbrink}

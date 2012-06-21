@@ -1,4 +1,18 @@
-Changes in depmixS4 version 1.1-2
+Changes in depmixS4 version 1.3-0
+
+Major changes
+
+  o Fit will now allow a choice between maximising the regular or 
+    classification likelihood.
+
+Minor changes
+
+  o Binomial models now treat factors in the same way as glm(); that is
+    the first level of a factor is treated as a failure, and the remaining
+    levels as successes.
+    
+
+Changes in depmixS4 version 1.2-0
 
 Major changes
   

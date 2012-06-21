@@ -157,13 +157,11 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 }
 
 # em for hidden markov models
-em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE, classification=c("soft","hard"),...) {
+em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,classification=c("soft","hard"),...) {
 	
 	if(!is(object,"depmix")) stop("object is not of class 'depmix'")
 	
 	clsf <- match.arg(classification)
-	
-	clsf="soft"
 	
 	ns <- nstates(object)
 	
@@ -214,6 +212,12 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		# maximization
 				
 		# should become object@prior <- fit(object@prior, gamma)
+		
+		if(clsf == "hard") {
+		    vstate <- as.factor(viterbi(object)[,1])
+		    gamma <- as.matrix(model.matrix(~ vstate - 1))
+		}
+	
 		object@prior@y <- fbo$gamma[bt,,drop=FALSE]
 		object@prior <- fit(object@prior, w=NULL, ntimes=NULL)
 		object@init <- dens(object@prior)
@@ -271,10 +275,17 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 	class(object) <- "depmix.fitted"
 	
 	if(converge) {
-		object@message <- switch(crit,
-			relative = "Log likelihood converged to within tol. (relative change)",
-			absolute = "Log likelihood converged to within tol. (absolute change)"
-		)
+	    if(clsf == "hard") {
+		    object@message <- switch(crit,
+			    relative = "Log classification likelihood converged to within tol. (relative change)",
+			    absolute = "Log classification likelihood converged to within tol. (absolute change)"
+		    )	    
+	    } else {
+		    object@message <- switch(crit,
+			    relative = "Log likelihood converged to within tol. (relative change)",
+			    absolute = "Log likelihood converged to within tol. (absolute change)"
+		    )
+		}
 	} else object@message <- "'maxit' iterations reached in EM without convergence."
 	
 	# no constraints in EM, except for the standard constraints ...
