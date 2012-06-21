@@ -214,9 +214,13 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		# should become object@prior <- fit(object@prior, gamma)
 		
 		if(clsf == "hard") {
-		    vstate <- as.factor(viterbi(object)[,1])
-		    gamma <- as.matrix(model.matrix(~ vstate - 1))
-		}
+		    vstate <- viterbi(object)[,1]
+		    fbo$gamma <- as.matrix(model.matrix(~ factor(vstate) - 1))
+		    # TODO: compute fbo$xi
+		    fbo$xi <- array(0,dim=dim(fbo$xi))
+		    fbo$xi[cbind(1:(dim(fbo$xi)[1] - 1),vstate[-1],vstate[-length(vstate)])] <- 1
+	        # TODO: check likelihood
+		} 
 	
 		object@prior@y <- fbo$gamma[bt,,drop=FALSE]
 		object@prior <- fit(object@prior, w=NULL, ntimes=NULL)
@@ -225,6 +229,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		trm <- matrix(0,ns,ns)
 		for(i in 1:ns) {
 			if(!object@stationary) {
+
 				object@transition[[i]]@y <- fbo$xi[,,i]/fbo$gamma[,i]
 				object@transition[[i]] <- fit(object@transition[[i]],w=as.matrix(fbo$gamma[,i]),ntimes=ntimes(object)) # check this
 			} else {
