@@ -29,7 +29,7 @@ setMethod("fit",
 		
 		if(method=="EM") {
 			if(!(emcontrol$crit %in% c("absolute","relative"))) stop("'crit' argument to em.control not recognized")
-			object <- em(object,maxit=emcontrol$maxit,tol=emcontrol$tol,crit=emcontrol$crit,random.start=emcontrol$random.start,verbose=verbose,...)
+			object <- em(object,maxit=emcontrol$maxit,tol=emcontrol$tol,crit=emcontrol$crit,random.start=emcontrol$random.start,classification=emcontrol$classification,verbose=verbose,...)
 		}
 		
 		if(!(method %in% c("EM","donlp","rsolnp"))) stop("'method' argument invalid; should be one of 'EM', 'rsolnp', 'donlp'.")

@@ -59,7 +59,6 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		if(clsf == "hard") {
 		    gamma <- t(apply(gamma,1,ind.max))
 		}
-
 		LL <- -1e10
 		
 		for(i in 1:ns) {
@@ -71,7 +70,13 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		}
 		
 		# initial expectation
-		fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
+		if(clsf == "hard") {
+		  fbo <- list()
+		  vstate <- apply(gamma,1,which.max)
+		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+		} else {
+		  fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
+		}
 		LL <- fbo$logLike
 		
 		if(is.nan(LL)) stop("Cannot find suitable starting values; please provide them.")
@@ -79,10 +84,18 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 	} else {
 		# initial expectation
 		B <- apply(object@dens,c(1,3),prod)
-		gamma <- object@init*B
-		LL <- sum(log(rowSums(gamma)))
+		
+		if(clsf == "hard") {
+		  gamma <- t(apply(object@init*B,1,ind.max))
+      LL <- sum(log(rowSums(gamma*B)))
+		} else {
+		  gamma <- object@init*B
+		  LL <- sum(log(rowSums(gamma)))
+		  gamma <- gamma/rowSums(gamma)
+		}
+		
 		if(is.nan(LL)) stop("Starting values not feasible; please provide them.")
-		gamma <- gamma/rowSums(gamma)
+		
 	}
 	
 	LL.old <- LL + 1
@@ -93,9 +106,6 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		
 		# should become object@prior <- fit(object@prior)
 		
-		if(clsf == "hard") {
-		    gamma <- t(apply(gamma,1,ind.max))
-		}
 		object@prior@y <- gamma[bt,,drop=FALSE]
 		object@prior <- fit(object@prior, w=NULL,ntimes=NULL)
 		object@init <- dens(object@prior)
@@ -110,11 +120,19 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		
 		# expectation
 		B <- apply(object@dens,c(1,3),prod)
-		gamma <- object@init*B
-		LL <- sum(log(rowSums(gamma)))
+		if(clsf == "hard") {
+		  gamma <- t(apply(object@init*B,1,ind.max))
+		  LL <- sum(log(rowSums(gamma*B)))
+		} else {
+		  gamma <- object@init*B
+		  LL <- sum(log(rowSums(gamma)))
+		  # normalize
+		  gamma <- gamma/rowSums(gamma)
+		}
+		#gamma <- object@init*B
+		
 
-		# normalize
-		gamma <- gamma/rowSums(gamma)
+		
 		
 		# print stuff
 		if(verbose&((j%%5)==0)) {
@@ -139,10 +157,17 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 	class(object) <- "mix.fitted"
 
 	if(converge) {
-		object@message <- switch(crit,
-			relative = "Log likelihood converged to within tol. (relative change)",
-			absolute = "Log likelihood converged to within tol. (absolute change)"
-		)
+	  if(clsf == "hard") {
+		  object@message <- switch(crit,
+			  relative = "Log classification likelihood converged to within tol. (relative change)",
+			  absolute = "Log classification likelihood converged to within tol. (absolute change)"
+		  )	  
+	  } else {
+		  object@message <- switch(crit,
+			  relative = "Log likelihood converged to within tol. (relative change)",
+			  absolute = "Log likelihood converged to within tol. (absolute change)"
+		  )
+		}
 	} else object@message <- "'maxit' iterations reached in EM without convergence."
 
 	# no constraints in EM, except for the standard constraints ...
@@ -193,14 +218,32 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		}
 		
 		# initial expectation
-		fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+	  if(clsf == "hard") {
+	    fbo <- list()
+		  vstate <- viterbi(object)[,1]
+		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate) - 1))
+		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
+		  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
+		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+		} else {
+		  fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+		}
 		LL <- fbo$logLike
 		
 		if(is.nan(LL)) stop("Cannot find suitable starting values; please provide them.")
 		
 	} else {
 		# initial expectation
-		fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+	  if(clsf == "hard") {
+	    fbo <- list()
+		  vstate <- viterbi(object)[,1]
+		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate) - 1))
+		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
+		  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
+		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+		} else {
+		  fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
+	  }
 		LL <- fbo$logLike
 		if(is.nan(LL)) stop("Starting values not feasible; please provide them.")
 	}
@@ -212,16 +255,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		# maximization
 				
 		# should become object@prior <- fit(object@prior, gamma)
-		
-		if(clsf == "hard") {
-		    vstate <- viterbi(object)[,1]
-		    fbo$gamma <- as.matrix(model.matrix(~ factor(vstate) - 1))
-		    # TODO: compute fbo$xi
-		    fbo$xi <- array(0,dim=dim(fbo$xi))
-		    fbo$xi[cbind(1:(dim(fbo$xi)[1] - 1),vstate[-1],vstate[-length(vstate)])] <- 1
-	        # TODO: check likelihood
-		} 
-	
+			
 		object@prior@y <- fbo$gamma[bt,,drop=FALSE]
 		object@prior <- fit(object@prior, w=NULL, ntimes=NULL)
 		object@init <- dens(object@prior)
@@ -256,10 +290,18 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 			}
 		}
 		
-		# expectation
-		fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
-		LL <- fbo$logLike
-				
+		if(clsf == "hard") {
+		  vstate <- viterbi(object)[,1]
+		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate) - 1))
+		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
+		  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
+		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+		} else {
+		  # expectation
+		  fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)	  
+	  }
+	  
+	  LL <- fbo$logLike	
 		if(verbose&((j%%5)==0)) cat("iteration",j,"logLik:",LL,"\n")
 		
 		if( (LL >= LL.old)) {

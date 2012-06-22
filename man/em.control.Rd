@@ -8,7 +8,7 @@
 
 \usage{
 	
-	em.control(maxit = 500, tol = 1e-08, crit = "relative", random.start = TRUE, classification = c("soft","hard"))
+	em.control(maxit = 500, tol = 1e-08, crit = c("relative","absolute"), random.start = TRUE, classification = c("soft","hard"))
 	
 }
 
