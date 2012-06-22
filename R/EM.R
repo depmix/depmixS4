@@ -221,7 +221,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 	  if(clsf == "hard") {
 	    fbo <- list()
 		  vstate <- viterbi(object)[,1]
-		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate) - 1))
+		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate,levels=1:ns) - 1))
 		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
 		  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
 		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
@@ -237,7 +237,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 	  if(clsf == "hard") {
 	    fbo <- list()
 		  vstate <- viterbi(object)[,1]
-		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate) - 1))
+		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate,levels=1:ns) - 1))
 		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
 		  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
 		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
@@ -292,7 +292,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		
 		if(clsf == "hard") {
 		  vstate <- viterbi(object)[,1]
-		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate) - 1))
+		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate,levels=1:ns) - 1))
 		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
 		  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
 		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
