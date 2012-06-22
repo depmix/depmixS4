@@ -255,6 +255,12 @@ fm2 <- fit(mod)
 # plot BIC and posterior state sequence for the 2-state model
 plot(as.ts(posterior(fm2)[,3]),ylab="probability",main="Posterior probability of state 2 (volatile, negative markets).")
 
+# using "hard" assignment of observations to the states, we can maximise the
+# classification likelihood instead of the usual marginal likelihood
+# (this example uses the model at the start of these examples)
+set.seed(1)
+# fit the model by calling fit
+fm3 <- fit(mod,emcontrol=em.control(classification="hard"))
 
 }
 
