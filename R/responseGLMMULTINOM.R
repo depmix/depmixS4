@@ -39,6 +39,8 @@ setMethod("fit","MULTINOMresponse",
 			if(is.null(w)) w <- rep(1,nrow(object@y))
 			sw <- sum(w[!nas])
 			pars <- c(apply(as.matrix(object@y[!nas,]),2,function(x){sum(x*w[!nas])/sw}))
+# 			if(any(pars<1e-5)) warning("Parameters smaller than 1e-5 have been set to zero.")
+			pars[pars<1e-5] <- 0 # set small values to zero
 			pars <- pars/sum(pars)
 			object <- setpars(object,pars)
 		}
