@@ -156,25 +156,27 @@ setMethod("fit","transInit",
     		}
     		pars$coefficients <- t(matrix(fit$wts,ncol=ncol(pars$coefficients),nrow=nrow(pars$coefficients)+1)[-1,])
     		object <- setpars(object,unlist(pars))
-  		},
-  		identity = {
-  		  # object@y = fbo$xi[,,i]/fbo$gamma[,i]
-  		  # should become (see em):
-  		  #for(k in 1:ns) {
+		},
+		identity = {
+				# object@y = fbo$xi[,,i]/fbo$gamma[,i]
+				# should become (see em):
+				#for(k in 1:ns) {
 				#		trm[i,k] <- sum(fbo$xi[-c(et),k,i])/sum(fbo$gamma[-c(et),i])
 				#	}
 				if(!is.null(w)) {
-				  sw <- sum(w)
-				  pars <- colSums(w*object@y)/sum(w)
+						sw <- sum(w)
+						pars <- colSums(w*object@y)/sum(w)
 				} else {
-				  pars <- colMeans(object@y)
+						pars <- colMeans(object@y)
 				}
-			  object <- setpars(object,pars)
-  		},
-  		stop("link function not implemented")
-  	)
-		object
-	}
+ 				pars[pars<1e-6] <- 0 # set small values to zero
+				pars <- pars/sum(pars)
+				object <- setpars(object,pars)
+		},
+		stop("link function not implemented")
+	)
+	object
+}
 )
 
 setMethod("simulate",signature(object="transInit"),
