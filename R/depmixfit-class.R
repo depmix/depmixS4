@@ -47,7 +47,7 @@ setMethod("summary","mix.fitted",
 		)
 		if(ans==1|ans==3) {
 			cat("Mixture probabilities model \n")
-			print(object@prior)
+			show(object@prior)
 			cat("\n")
 		}
 		if(ans==1|ans==2) {
@@ -55,7 +55,7 @@ setMethod("summary","mix.fitted",
 				cat("Response model(s) for state", i,"\n\n")
 				for(j in 1:object@nresp) {
 					cat("Response model for response",j,"\n")
-					print(object@response[[i]][[j]])
+					show(object@response[[i]][[j]])
 					cat("\n")
 				}
 				cat("\n")
@@ -110,13 +110,13 @@ setMethod("summary","depmix.fitted",
 		)
 		if(ans==1|ans==3) {
 			cat("Initial state probabilties model \n")
-			print(object@prior)
+			show(object@prior)
 			cat("\n")
 		}
 		if(ans==1|ans==4) {
 			for(i in 1:object@nstates) {
 				cat("Transition model for state (component)", i,"\n")
-				print(object@transition[[i]])
+				show(object@transition[[i]])
 				cat("\n")
 			}
 			cat("\n")
@@ -126,7 +126,7 @@ setMethod("summary","depmix.fitted",
 				cat("Response model(s) for state", i,"\n\n")
 				for(j in 1:object@nresp) {
 					cat("Response model for response",j,"\n")
-					print(object@response[[i]][[j]])
+					show(object@response[[i]][[j]])
 					cat("\n")
 				}
 				cat("\n")
