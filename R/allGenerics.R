@@ -51,6 +51,8 @@ setGeneric("setpars", function(object,values,which="pars",...) standardGeneric("
 
 setGeneric("getpars", function(object,which="pars",...) standardGeneric("getpars"))
 
+setGeneric("getmodel", function(object,...) standardGeneric("getmodel"))
+
 
 # functions 
 setGeneric("fit", function(object, ...) standardGeneric("fit"))
@@ -66,9 +68,6 @@ setGeneric("logDens",function(object,...) standardGeneric("logDens"))
 setGeneric("dens",function(object,...) standardGeneric("dens"))
 
 setGeneric("predict", function(object, ...) standardGeneric("predict"))
-
-
-# redundant??
 
 # setGeneric("getModel", function(object, ...) standardGeneric("getModel"))
 
