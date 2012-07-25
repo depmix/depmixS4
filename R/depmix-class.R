@@ -131,13 +131,13 @@ setMethod("simulate",signature(object="mix"),
 setMethod("show","mix",
 	function(object) {
 		cat("Initial state probabilties model \n")
-		print(object@prior)
+		show(object@prior)
 		cat("\n")
 		for(i in 1:object@nstates) {
 			cat("Response model(s) for state", i,"\n\n")
 			for(j in 1:object@nresp) {
 				cat("Response model for response",j,"\n")
-				print(object@response[[i]][[j]])
+				show(object@response[[i]][[j]])
 				cat("\n")
 			}
 			cat("\n")
@@ -177,11 +177,11 @@ setClass("depmix",
 setMethod("show","depmix",
 	function(object) {
 		cat("Initial state probabilties model \n")
-		print(object@prior)
+		show(object@prior)
 		cat("\n")
 		for(i in 1:object@nstates) {
 			cat("Transition model for state (component)", i,"\n")
-			print(object@transition[[i]])
+			show(object@transition[[i]])
 			cat("\n")
 		}
 		cat("\n")
@@ -189,7 +189,7 @@ setMethod("show","depmix",
 			cat("Response model(s) for state", i,"\n\n")
 			for(j in 1:object@nresp) {
 				cat("Response model for response",j,"\n")
-				print(object@response[[i]][[j]])
+				show(object@response[[i]][[j]])
 				cat("\n")
 			}
 			cat("\n")
