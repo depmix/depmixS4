@@ -50,6 +50,22 @@ setMethod("is.stationary",signature(object="mix"),
 	}
 )
 
+setMethod("getmodel","mix",
+		function(object, which="response", state=1, number) {
+				ans=switch(
+						which,
+						"response" = 1,
+						"prior" = 2,
+						stop("Invalid 'which' argument in getmodel on 'mix' object.")
+				)
+				if(ans==1) {
+						if(is.null(number)) number <- 1
+						return(object@response[[state]][[number]])
+				}
+				if(ans==2) return(object@prior)
+		}
+)
+
 setMethod("simulate",signature(object="mix"),
 	function(object,nsim=1,seed=NULL,...) {
 		
@@ -195,6 +211,24 @@ setMethod("show","depmix",
 			cat("\n")
 		}
 	}
+)
+
+setMethod("getmodel","depmix",
+		function(object, which="response", state=1, number) {
+				ans=switch(
+						which,
+						"response" = 1,
+						"prior" = 2,
+						"transition"=3,
+						stop("Invalid 'which' argument in getmodel on 'mix' object.")
+				)
+				if(ans==1) {
+						if(is.null(number)) number <- 1
+						return(object@response[[state]][[number]])
+				}
+				if(ans==2) return(object@prior)
+				if(ans==3) return(object@transition[[state]])
+		}
 )
 
 setMethod("is.stationary",signature(object="depmix"),
