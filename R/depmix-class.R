@@ -189,19 +189,37 @@ setClass("depmix",
 # 
 # PRINT method
 # 
+# 
+# PRINT method
+# 
 
 setMethod("show","depmix",
 	function(object) {
-		cat("Initial state probabilties model \n")
-		show(object@prior)
-		cat("\n")
-		for(i in 1:object@nstates) {
-			cat("Transition model for state (component)", i,"\n")
-			show(object@transition[[i]])
+		ns <- nstates(object)
+		if(is.null(attr(object,"type"))) { 
+			cat("Initial state probabilties model \n")
+			show(object@prior)
 			cat("\n")
+			for(i in 1:object@nstates) {
+				cat("Transition model for state (component)", i,"\n")
+				show(object@transition[[i]])
+				cat("\n")
+			}
+			cat("\n")
+		} else {
+			if(attr(object,"type")=="hmm") { 
+				cat("Initial state probabilties\n")
+				print(object@prior@parameters$coefficients[1:ns])
+				cat("\nTransition matrix \n")
+				pars <- getpars(object)
+				trm <- matrix(pars[(ns+1):(ns^2+ns)],ns,ns,byr=T)
+				rownames(trm) <- paste("fromS",1:ns,sep="")
+				colnames(trm) <- paste("toS",1:ns,sep="")
+				print(trm)
+				cat("\n")
+			} 
 		}
-		cat("\n")
-		for(i in 1:object@nstates) {
+		for(i in 1:ns) {
 			cat("Response model(s) for state", i,"\n\n")
 			for(j in 1:object@nresp) {
 				cat("Response model for response",j,"\n")
