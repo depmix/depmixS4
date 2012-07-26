@@ -30,8 +30,18 @@
 	
 	\S4method{summary}{depmix.fitted}(object,which="all")
 
-	\S4method{fit}{mix}(object, fixed=NULL, equal=NULL, conrows=NULL,
-		conrows.upper=0, conrows.lower=0, method=NULL, emcontrol=em.control(), verbose=TRUE,...)
+	\S4method{fit}{mix}(object, fixed=NULL, equal=NULL, 
+		conrows=NULL, conrows.upper=0, conrows.lower=0, 
+		method=NULL, verbose=TRUE,
+		emcontrol=em.control(),
+		solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-5, tol = 1e-6),
+		donlpcntrl=list(iterma = 4000, nstep = 20, fnscale = 1, report = FALSE, 
+        rep.freq = 1, tau0 = 1, tau = 0.1, del0 = 1, epsx = 1e-05, 
+        delmin = 0.1, epsdif = 1e-08, nreset.multiplier = 1, 
+        difftype = 3, epsfcn = 1e-16, taubnd = 1, hessian = FALSE, 
+        te0 = TRUE, te1 = FALSE, te2 = FALSE, te3 = FALSE, silent = TRUE, 
+        intakt = TRUE),
+		...)
 	
 	\S4method{summary}{mix.fitted}(object,which="all")
 
@@ -53,11 +63,17 @@
 
 	\item{method}{The optimization method; mostly determined by
 		constraints.}
+	
+	\item{verbose}{Should optimization information be displayed on screen?}
 		
 	\item{emcontrol}{Named list with control parameters for the EM
 		algorithm (see \code{\link{em.control}}).}
   
-	\item{verbose}{Should optimization information be displayed on screen?}
+	\item{solnpcntrl}{Control parameters passed to the 'rsolnp' optimizer;
+	  see \code{\link{solnp}} for explanation and defaults used there.}
+	
+	\item{donlpcntrl}{Control parameters passed to 'donlp' optimizer; see
+	\code{\link{donlp2Control}} for explanation and defaults used there.}
 	
 	\item{which}{Should summaries be provided for "all" submodels? Options 
 		are "prior", "response", and for fitted depmix models also "transition".}
@@ -68,13 +84,13 @@
 
 \details{ 
 
-	Models are fitted by the EM algorithm if there are no constraints on
-	the parameters. Aspects of the EM algorithm can be controlled through
-	the \code{emcontrol} argument; see details in \code{\link{em.control}}. 
-	Otherwise the general optimizers \code{solnp}, the
-	default (from package \code{Rsolnp}) or \code{donlp2} (from package
-	\code{Rdonlp2}) are used which handle general linear (in-)equality
-	constraints.
+	Models are fitted by the EM algorithm if there are no constraints on the
+	parameters.  Aspects of the EM algorithm can be controlled through the
+	\code{emcontrol} argument; see details in \code{\link{em.control}}.
+	Otherwise the general optimizers \code{solnp}, the default (from package
+	\code{Rsolnp}) or \code{donlp2} (from package \code{Rdonlp2}) are used
+	which handle general linear (in-)equality constraints.  These optimizers
+	are selected by setting method='rsolnp' or method='donlp' respectively.
 	
 	Three types of constraints can be specified on the parameters: fixed,
 	equality, and general linear (in-)equality constraints.  Constraint

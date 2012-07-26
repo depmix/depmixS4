@@ -3,7 +3,7 @@
 # 
 
 rdirichlet <- function(n, alpha) {
-  # taken from gtools...
+  # taken from gtools
     l <- length(alpha)
     x <- matrix(rgamma(l * n, alpha), ncol = l, byrow = TRUE)
     sm <- x %*% rep(1, l)
@@ -128,11 +128,9 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		  LL <- sum(log(rowSums(gamma)))
 		  # normalize
 		  gamma <- gamma/rowSums(gamma)
-		}
-		#gamma <- object@init*B
-		
-
-		
+	}
+	
+		# gamma <- object@init*B 		
 		
 		# print stuff
 		if(verbose&((j%%5)==0)) {
