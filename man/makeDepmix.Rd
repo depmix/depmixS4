@@ -290,7 +290,7 @@ inMod <- transInit(~1,ns=2,ps=instart,data=data.frame(rep(1,3)))
 mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137),stat=FALSE)
 
 fm3 <- fit(mod,emc=em.control(rand=FALSE))
-summary(fm3)
+summary(fm3,compact=FALSE)
 
 }
 

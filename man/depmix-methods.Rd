@@ -30,6 +30,11 @@
 \alias{getpars,depmix-method}
 \alias{getpars,mix-method}
 
+\alias{getmodel}
+\alias{getmodel,depmix-method}
+\alias{getmodel,mix-method}
+
+
 \title{ 'depmix' and 'mix' methods. }
 
 \description{
@@ -57,6 +62,9 @@ Various methods for \code{depmix} and \code{mix} objects.
 	
 	\S4method{getpars}{depmix}(object,which="pars",...)	
 	\S4method{getpars}{mix}(object,which="pars",...)	
+	
+	\S4method{getmodel}{depmix}(object,which="response",state=1,number=1)	
+	\S4method{getmodel}{mix}(object,which="response",state=1,number=1)
 }
 \arguments{
 
@@ -73,14 +81,25 @@ Various methods for \code{depmix} and \code{mix} objects.
   smoothed variables, and the forward and backward variables are accessible
   through the \code{\link{forwardbackward}} function.} 
 
-	\item{which}{The default "pars" returns a vector of all parameters of a
-	\code{depmix} object; the alternative value "fixed" returns a logical
-	vector of the same length indicating which parameters are fixed.  The
-	setpars functions sets parameters to new values; \code{setpars} also
-	recomputes the dens, trans and init slots of \code{depmix} objects.  Note
-	that the \code{getpars} and \code{setpars} functions for \code{depmix}
-	objects simply call the functions of the same name for the response and
-	transition models.}
+	\item{which}{\code{getpars} function: The default "pars" returns a vector
+	of all parameters of a \code{depmix} object; the alternative value
+	"fixed" returns a logical vector of the same length indicating which
+	parameters are fixed.  The setpars functions sets parameters to new
+	values; \code{setpars} also recomputes the dens, trans and init slots of
+	\code{depmix} objects.  Note that the \code{getpars} and \code{setpars}
+	functions for \code{depmix} objects simply call the functions of the same
+	name for the response and transition models.
+	
+	\code{getmodel} function: possible values are "response" (the default),
+	"prior" and "transition" to return the corresponding submodels.  }
+	
+	\item{state}{In \code{getmodel} this determines the submodel to be
+	returned (together with number in the case of response models); when
+	which="transition", \code{getmodel} returns the transition submodel for
+	state=\code{state}.}
+
+	\item{number}{In \code{getmodel} this determines the "response" model to
+	be returned from state \code{state}.}
 	  
   \item{...}{Not used currently.}
 
@@ -99,6 +118,10 @@ Various methods for \code{depmix} and \code{mix} objects.
 	\item{setpars}{returns a \code{(dep-)mix} object with new parameter values.}
 
 	\item{getpars}{returns a vector with the current parameter values.}
+	
+	\item{getmodel}{returns a submodel of a \code{(dep-)mix} model; the prior
+	model, one of the transition models (determined by argument state) or one
+	of the response models (determined by arguments state and number).}
 
 }
 
@@ -110,6 +133,10 @@ Various methods for \code{depmix} and \code{mix} objects.
 data(speed)
 mod <- depmix(list(rt~1,corr~1),data=speed,nstates=2,family=list(gaussian(),multinomial()))
 
+getmodel(mod,"response",2,1)
+
+getmodel(mod,"prior")
+
 # get the loglikelihood of the model
 logLik(mod)
 
@@ -119,7 +146,7 @@ mod
 
 # to see which parameters are fixed (by default only baseline parameters in
 # the multinomial logistic models for the transition models and the initial
-# state probabilities model
+# state probabilities model)
 mod <- setpars(mod, getpars(mod,which="fixed"))
 mod
 

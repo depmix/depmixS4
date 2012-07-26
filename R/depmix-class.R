@@ -51,7 +51,7 @@ setMethod("is.stationary",signature(object="mix"),
 )
 
 setMethod("getmodel","mix",
-		function(object, which="response", state=1, number) {
+		function(object, which="response", state=1, number=1) {
 				ans=switch(
 						which,
 						"response" = 1,
@@ -59,7 +59,6 @@ setMethod("getmodel","mix",
 						stop("Invalid 'which' argument in getmodel on 'mix' object.")
 				)
 				if(ans==1) {
-						if(is.null(number)) number <- 1
 						return(object@response[[state]][[number]])
 				}
 				if(ans==2) return(object@prior)
@@ -156,6 +155,7 @@ setMethod("show","mix",
 
 setMethod("summary","mix",
 		function(object,which="all",compact=TRUE) {
+				ns <- object@nstates
 				ans=switch(which,
 						"all" = 1,
 						"response" = 2,
@@ -247,16 +247,15 @@ setMethod("show","depmix",
 )
 
 setMethod("getmodel","depmix",
-		function(object, which="response", state=1, number) {
+		function(object, which="response", state=1, number=1) {
 				ans=switch(
 						which,
 						"response" = 1,
 						"prior" = 2,
-						"transition"=3,
+						"transition" = 3,
 						stop("Invalid 'which' argument in getmodel on 'mix' object.")
 				)
 				if(ans==1) {
-						if(is.null(number)) number <- 1
 						return(object@response[[state]][[number]])
 				}
 				if(ans==2) return(object@prior)
