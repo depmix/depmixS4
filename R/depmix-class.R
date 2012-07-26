@@ -145,25 +145,74 @@ setMethod("simulate",signature(object="mix"),
 # 
 
 setMethod("show","mix",
-	function(object) {
-		cat("Initial state probabilties model \n")
-		show(object@prior)
-		cat("\n")
-		for(i in 1:object@nstates) {
-			cat("Response model(s) for state", i,"\n\n")
-			for(j in 1:object@nresp) {
-				cat("Response model for response",j,"\n")
-				show(object@response[[i]][[j]])
-				cat("\n")
-			}
-			cat("\n")
+		function(object) {
+				summary(object)
 		}
-	}
 )
 
 # 
-# SUMMARY method: to do
+# SUMMARY method
 # 
+
+setMethod("summary","mix",
+		function(object,which="all",compact=TRUE) {
+				ans=switch(which,
+						"all" = 1,
+						"response" = 2,
+						"prior" = 3,
+						stop("Invalid 'which' argument in summary of fitted mix model")
+				)
+				if(ans==1|ans==3) {
+						# show the prior models
+						cat("Mixture probabilities model \n")
+						if(object@prior@formula==~1) {
+								pr <- object@prior@parameters$coefficients
+								rownames(pr) <- ""
+								colnames(pr) <- paste("St",1:ns,sep="")
+								print(pr)
+						} else show(object@prior)
+						cat("\n")
+				}
+				if(ans==1|ans==2) {
+						# show the response models
+						if(!compact) {
+								for(i in 1:ns) {
+										cat("Response model(s) for state", i,"\n\n")
+										for(j in 1:object@nresp) {
+												cat("Response model for response",j,"\n")
+												show(object@response[[i]][[j]])
+												cat("\n")
+										}
+										cat("\n")
+								}
+						} else {
+								cat("Response models \n")
+								for(j in 1:object@nresp) {
+										cat("Resp",j, ":", object@response[[1]][[j]]@family$family, "\n")
+								}
+								cat("Response parameters \n")
+								pars <- list()
+								np <- numeric(object@nresp)
+								for(j in 1:object@nresp) {
+										np[j] <- npar(object@response[[1]][[j]])
+										pars[[j]] <- matrix(,nr=ns,nc=np[j])
+								}
+								allpars <- matrix(,nr=ns,nc=0)
+								nms <- c()
+								for(j in 1:object@nresp) {
+										for(i in 1:ns) {
+												pars[[j]][i,]=getpars(object@response[[i]][[j]])
+										}
+										nms <- c(nms,paste("Resp",j,1:np[j],sep="."))
+										allpars <- cbind(allpars,pars[[j]])					
+								}
+								rownames(allpars) <- paste("St",1:ns,sep="")
+								colnames(allpars) <- nms
+								print(allpars)
+						}
+				}
+		}	
+)
 
 
 # 
@@ -186,49 +235,15 @@ setClass("depmix",
 	contains="mix"
 )
 
-# 
-# PRINT method
-# 
+
 # 
 # PRINT method
 # 
 
 setMethod("show","depmix",
-	function(object) {
-		ns <- nstates(object)
-		if(is.null(attr(object,"type"))) { 
-			cat("Initial state probabilties model \n")
-			show(object@prior)
-			cat("\n")
-			for(i in 1:object@nstates) {
-				cat("Transition model for state (component)", i,"\n")
-				show(object@transition[[i]])
-				cat("\n")
-			}
-			cat("\n")
-		} else {
-			if(attr(object,"type")=="hmm") { 
-				cat("Initial state probabilties\n")
-				print(object@prior@parameters$coefficients[1:ns])
-				cat("\nTransition matrix \n")
-				pars <- getpars(object)
-				trm <- matrix(pars[(ns+1):(ns^2+ns)],ns,ns,byr=T)
-				rownames(trm) <- paste("fromS",1:ns,sep="")
-				colnames(trm) <- paste("toS",1:ns,sep="")
-				print(trm)
-				cat("\n")
-			} 
+		function(object) {
+				summary(object)
 		}
-		for(i in 1:ns) {
-			cat("Response model(s) for state", i,"\n\n")
-			for(j in 1:object@nresp) {
-				cat("Response model for response",j,"\n")
-				show(object@response[[i]][[j]])
-				cat("\n")
-			}
-			cat("\n")
-		}
-	}
 )
 
 setMethod("getmodel","depmix",
@@ -354,5 +369,86 @@ setMethod("simulate",signature(object="depmix"),
 # SUMMARY method: to do
 # 
 
+# copied from hmmr (and removed there)
+
+setMethod("summary","depmix",
+	function(object,which="all", compact=TRUE) {
+		ns <- object@nstates
+		ans=switch(which,
+			"all" = 1,
+			"response" = 2,
+			"prior" = 3,
+			"transition" = 4,
+			stop("Invalid 'which' argument in summary of fitted depmix model")
+		)
+		if(ans==1|ans==3) {
+				# show the prior models
+				cat("Initial state probabilties model \n")
+				if(object@prior@formula==~1) {
+						pr <- object@prior@parameters$coefficients
+						rownames(pr) <- ""
+						colnames(pr) <- paste("St",1:ns,sep="")
+						print(pr)
+						cat("\n")
+				} else show(object@prior)
+		}
+		if(ans==1|ans==4) {
+				# show the transition models
+				if(object@transition[[1]]@formula==~1) {
+						cat("\nTransition matrix \n")
+						pars <- getpars(object)
+						trm <- matrix(pars[(ns+1):(ns^2+ns)],ns,ns,byr=T)
+						rownames(trm) <- paste("fromS",1:ns,sep="")
+						colnames(trm) <- paste("toS",1:ns,sep="")
+						print(trm)
+						cat("\n")
+				} else {
+						for(i in 1:ns) {
+								cat("Transition model for state (component)", i,"\n")
+								show(object@transition[[i]])
+								cat("\n")
+						}
+						cat("\n")
+				}
+		}
+		if(ans==1|ans==2) {
+				# show the response models
+			if(!compact) {
+				for(i in 1:ns) {
+					cat("Response model(s) for state", i,"\n\n")
+					for(j in 1:object@nresp) {
+						cat("Response model for response",j,"\n")
+						show(object@response[[i]][[j]])
+						cat("\n")
+					}
+					cat("\n")
+				}
+			} else {
+				cat("Response parameters \n")
+				for(j in 1:object@nresp) {
+						cat("Resp",j, ":", object@response[[1]][[j]]@family$family, "\n")
+				}
+				pars <- list()
+				np <- numeric(object@nresp)
+				for(j in 1:object@nresp) {
+					np[j] <- npar(object@response[[1]][[j]])
+					pars[[j]] <- matrix(,nr=ns,nc=np[j])
+				}
+				allpars <- matrix(,nr=ns,nc=0)
+				nms <- c()
+				for(j in 1:object@nresp) {
+					for(i in 1:ns) {
+						pars[[j]][i,]=getpars(object@response[[i]][[j]])
+				}
+				nms <- c(nms,paste("Resp",j,1:np[j],sep="."))
+					allpars <- cbind(allpars,pars[[j]])					
+				}
+				rownames(allpars) <- paste("St",1:ns,sep="")
+				colnames(allpars) <- nms
+				print(allpars)
+			}
+		}
+	}
+)
 
 
