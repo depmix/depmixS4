@@ -35,10 +35,10 @@
 		method=NULL, verbose=TRUE,
 		emcontrol=em.control(),
 		solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-5, tol = 1e-6),
-		donlpcntrl=list(iterma = 4000, nstep = 20, fnscale = 1, report = FALSE, 
-        rep.freq = 1, tau0 = 1, tau = 0.1, del0 = 1, epsx = 1e-05, 
+		donlpcntrl=list(iterma = 4000, nstep = 20, fnscale = 1, report = TRUE, 
+        rep.freq = 1, tau0 = 1, tau = 0.1, del0 = 1, epsx = 1e-06, 
         delmin = 0.1, epsdif = 1e-08, nreset.multiplier = 1, 
-        difftype = 3, epsfcn = 1e-16, taubnd = 1, hessian = FALSE, 
+        difftype = 2, epsfcn = 1e-16, taubnd = 1, hessian = FALSE, 
         te0 = TRUE, te1 = FALSE, te2 = FALSE, te3 = FALSE, silent = TRUE, 
         intakt = TRUE),
 		...)
@@ -73,7 +73,7 @@
 	  see \code{\link{solnp}} for explanation and defaults used there.}
 	
 	\item{donlpcntrl}{Control parameters passed to 'donlp' optimizer; see
-	\code{\link{donlp2Control}} for explanation and defaults used there.}
+	\code{?donlp2Control} for explanation and defaults used there.}
 	
 	\item{which}{Should summaries be provided for "all" submodels? Options 
 		are "prior", "response", and for fitted depmix models also "transition".}
