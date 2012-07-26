@@ -21,9 +21,9 @@ Minor changes
 	  depmix model, eg to use in deriving predictions, getting at parameter 
 		values, et cetera. 
 
-  o Small parameter values in multinomial response models (with identity 
-    link) are now set to zero to speed-up convergence. Current threshold 
-    is 1e-5. 
+	o Small parameter values in multinomial response models and the initial
+		probabilities and transition models (with identity link) are now set to
+		zero to speed-up convergence.  Current threshold is 1e-6. 
 
 Changes in depmixS4 version 1.2-0
 

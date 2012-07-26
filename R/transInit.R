@@ -158,11 +158,6 @@ setMethod("fit","transInit",
     		object <- setpars(object,unlist(pars))
 		},
 		identity = {
-				# object@y = fbo$xi[,,i]/fbo$gamma[,i]
-				# should become (see em):
-				#for(k in 1:ns) {
-				#		trm[i,k] <- sum(fbo$xi[-c(et),k,i])/sum(fbo$gamma[-c(et),i])
-				#	}
 				if(!is.null(w)) {
 						sw <- sum(w)
 						pars <- colSums(w*object@y)/sum(w)
