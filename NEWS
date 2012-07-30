@@ -5,6 +5,14 @@ Major changes
   o Fit will now allow a choice between maximising the regular or 
     classification likelihood.
 
+  o Parameters are now given proper names, following the glm() scheme 
+	  (e.g. '(Intercept)', 'x' et cetera); with this, the show and summary 
+		methods have changed considerably and now produce more compact and 
+		more readable output. The summary method (for both fitted and unfitted 
+    models) now has an argument 'compact' that controls the presentation of 
+    the repsonse model parameters. The prior and transition models are now
+    presented more compactly when there are no covariates. 
+
 Minor changes
 
   o Binomial models now treat factors in the same way as glm(); that is
@@ -12,10 +20,7 @@ Minor changes
     levels as successes.
 
 	o Un-fitted models now also have a summary method, which is identical to 
-    the show method. The summary method (for both fitted and unfitted 
-    models) now has a compact argument that controls the presentation of 
-    the repsonse model parameters. The prior and transition models are now
-    presented more compactly when there are no covariates.
+    the show method for these models.  
 
   o Added function getmodel(object) to select submodels of a full mix or 
 	  depmix model, eg to use in deriving predictions, getting at parameter 
