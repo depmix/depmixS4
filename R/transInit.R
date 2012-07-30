@@ -29,9 +29,11 @@ setMethod("transInit",
 		if(is.null(nstates)) stop("'nstates' must be provided in call to transInit model")
 		if(family$family=="multinomial") {
 			if(family$link=="identity") {
-				parameters$coefficients <- t(apply(matrix(1,ncol=nstates,nrow=ncol(x)),1,function(x) x/sum(x)))
+					if(ncol(x)>1) stop("covariates not allowed in multinomial model with identity link")
+					parameters$coefficients <- rep(1/nstates,nstates)
+					names(parameters$coefficients) <- paste("pr",1:nstates,sep="")
 				if(is.null(fixed)) {
-					fixed <- matrix(0,nrow=nrow(parameters$coefficients),ncol=ncol(parameters$coefficients))
+					fixed <- matrix(0,nrow=1,ncol=nstates)
 					fixed <- rep(0,nstates) # this needs to be fixed at some point using contraints
 					fixed <- c(as.logical(fixed))
 				}
@@ -48,7 +50,9 @@ setMethod("transInit",
 					fixed <- parameters$coefficients
 					fixed[,family$base] <- 1 
 					fixed <- c(as.logical(t(fixed)))
-				}
+			  }
+				colnames(parameters$coefficients) <- paste("St",1:nstates,sep="")
+				rownames(parameters$coefficients) <- attr(x,"dimnames")[[2]]
 			}
 		}
 		npar <- length(unlist(parameters))
@@ -57,10 +61,8 @@ setMethod("transInit",
 			if(length(pstart)!=npar) stop("length of 'pstart' must be ",npar)
 			if(family$family=="multinomial") {
 				if(family$link=="identity") {
-					parameters$coefficients[1,] <- pstart[1:ncol(parameters$coefficients)]
-					parameters$coefficients[1,] <- parameters$coefficients[1,]/sum(parameters$coefficients[1,])
-					pstart <- matrix(pstart,ncol(x),byrow=TRUE)
-					if(ncol(x)>1) parameters$coefficients[2:ncol(x),] <- pstart[2:ncol(x),] # this cannot occur ...
+					parameters$coefficients[1:nstates] <- pstart[1:nstates]
+					parameters$coefficients <- parameters$coefficients/sum(parameters$coefficients)
 				} else {
 					if(prob) {
 						parameters$coefficients[1,] <- family$linkfun(pstart[1:ncol(parameters$coefficients)],base=family$base)

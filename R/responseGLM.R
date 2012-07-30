@@ -83,6 +83,7 @@ setMethod("GLMresponse",
 			  if(is.null(namesy)) namesy <- 1:ncol(y)
 			  colnames(parameters$coefficients) <- namesy
 				rownames(parameters$coefficients) <- attr(x,"dimnames")[[2]]
+# 				if(ncol(x)==1) names(parameters$coefficients) <- 1:ncol(y)
 			}
 			if(family$link=="identity") {
 				if(ncol(x)>1) stop("covariates not allowed in multinomial model with identity link")
@@ -204,7 +205,6 @@ setMethod("setpars","GLMresponse",
 	}
 )
 
-
 setMethod("getpars","GLMresponse",
 		function(object,which="pars",...) {
 				switch(which,
@@ -215,7 +215,12 @@ setMethod("getpars","GLMresponse",
 										parameters <- c(t(object@parameters$coefficients)) # Why transpose?
 								} else {
 										parameters <- object@parameters$coefficients
-										if(object@family$family=="gaussian") parameters <- c(parameters,object@parameters$sd)
+										if(object@family$family=="gaussian") {
+												nms <- names(parameters)
+												parameters <- c(parameters,object@parameters$sd)
+												names(parameters) <- c(nms,"sd")
+										}
+										
 								}
 								pars <- parameters
 						},
