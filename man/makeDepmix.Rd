@@ -159,6 +159,7 @@ plot(as.ts(posterior(fm2)[,2]))
 # functions from the gamlss family of packages; see their help pages for 
 # interpretation of the mu, nu and sigma parameters that are fitted below
 
+\dontrun{
 require(gamlss)
 require(gamlss.dist)
 
@@ -291,6 +292,7 @@ mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(16
 
 fm3 <- fit(mod,emc=em.control(rand=FALSE))
 summary(fm3,compact=FALSE)
+}
 
 }
 
