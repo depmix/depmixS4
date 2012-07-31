@@ -2,16 +2,19 @@ Changes in depmixS4 version 1.3-0
 
 Major changes
 
-  o Fit will now allow a choice between maximising the regular or 
-    classification likelihood.
+	o The EM algorithm has gained an extra argument 'classification',
+		passed from the 'fit' function using argument 'emcontrol', to allow a
+		choice between maximising the regular (classification="soft", the
+		default) or classification (classification="hard") likelihood.
 
-  o Parameters are now given proper names, following the glm() scheme 
-	  (e.g. '(Intercept)', 'x' et cetera); with this, the show and summary 
-		methods have changed considerably and now produce more compact and 
-		more readable output. The summary method (for both fitted and unfitted 
-    models) now has an argument 'compact' that controls the presentation of 
-    the repsonse model parameters. The prior and transition models are now
-    presented more compactly when there are no covariates. 
+	o Parameters are now given proper names, following the glm() scheme
+		(e.g. '(Intercept)', 'x1', et cetera); with this, the show and summary
+		methods have changed considerably and now produce more compact and more
+		readable output.  The summary method (for both fitted and unfitted
+		models) now has an argument 'compact' (TRUE by default) that controls
+		the presentation of the repsonse model parameters.  The prior and
+		transition models are now presented more compactly when there are no
+		covariates.
 
 Minor changes
 

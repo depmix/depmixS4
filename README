@@ -13,7 +13,7 @@ multinomial logistics (or multinomials with identity link, which is the
 default when no covariates are present) with the possibility of including
 covariates.
 
-Optimization is by default done using the EM algorithm.  When linear
+Optimization is by default done using the EM algorithm.  When (linear)
 constraints are included, package Rsolnp is used for optimization (there is
 also support for using Rdonlp2 as optimizer, see USING RDONLP2 below).  New
 response distributions can be added by extending the response-class and
