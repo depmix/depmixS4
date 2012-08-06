@@ -292,11 +292,11 @@ To compute the log-likelihood, \cite{Lystig2002} define the following
 	\phi_{1}(j) &:= \Prob(\vc{O}_{1}, S_{1}=j) = \pi_{j} \vc{b}_{j}(\vc{O}_{1}) 
 	\label{eq:fwd1} \\
 	\phi_{t}(j) &:= \Prob(\vc{O}_{t}, S_{t}=j|\vc{O}_{1:(t-1)}) %\\
-	= \sum_{i=1}^{N} [\phi_{t-1}(i)a_{ij} \vc{b}_{j}(\vc{O}_{t})] \times 
+	= \sum_{i=1}^{n} [\phi_{t-1}(i)a_{ij} \vc{b}_{j}(\vc{O}_{t})] \times 
 (\Phi_{t-1})^{-1},
 	\label{eq:fwdt} 
 \end{align}
-where $\Phi_{t}=\sum_{i=1}^{N} \phi_{t}(i)$. Combining 
+where $\Phi_{t}=\sum_{i=1}^{n} \phi_{t}(i)$. Combining 
 $\Phi_{t}=\Prob(\vc{O}_{t}|\vc{O}_{1:(t-1)})$, and 
 equation~(\ref{eq:condLogl}) gives the following expression for the 
 log-likelihood:
@@ -384,7 +384,7 @@ computed as:
 %
 \begin{align}
 	\phi_t(i) &= \Prob(S_{t} = i|\vc{O}_{1:(t-1)}) 
-	\\ &=  \sum_{j=1}^N \phi_{t-1}(j) \Prob(S_t = i|S_{t-1}=j).
+	\\ &=  \sum_{j=1}^n \phi_{t-1}(j) \Prob(S_t = i|S_{t-1}=j).
 \end{align}
 %
 For later observations, we can then use this latter equation again,
