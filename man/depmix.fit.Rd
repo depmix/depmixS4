@@ -190,6 +190,21 @@ fmod1 # to see the logLik and optimization information
 # to see the parameters
 summary(fmod1)
 
+# same model, now with missing data
+
+speed[2,1] <- NA
+speed[3,2] <- NA
+
+# 2-state model on rt and corr from speed data set 
+# with Pacc as covariate on the transition matrix
+# ntimes is used to specify the lengths of 3 separate series
+mod1ms <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
+	family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
+# fit the model
+set.seed(3)
+fmod1ms <- fit(mod1ms)
+
+
 # FIX SOME PARAMETERS
 
 # get the starting values of this model to the optimized 
