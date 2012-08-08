@@ -162,6 +162,7 @@ setMethod("summary","mix",
 						} else show(object@prior)
 						cat("\n")
 				}
+				
 				if(ans==1|ans==2) {
 						# show the response models
 						if(!compact) {
@@ -175,11 +176,10 @@ setMethod("summary","mix",
 										cat("\n")
 								}
 						} else {
-								cat("Response models \n")
+								cat("Response parameters \n")
 								for(j in 1:object@nresp) {
 										cat("Resp",j, ":", object@response[[1]][[j]]@family$family, "\n")
 								}
-								cat("Response parameters \n")
 								pars <- list()
 								np <- numeric(object@nresp)
 								for(j in 1:object@nresp) {
@@ -190,9 +190,13 @@ setMethod("summary","mix",
 								nms <- c()
 								for(j in 1:object@nresp) {
 										for(i in 1:ns) {
-												pars[[j]][i,]=getpars(object@response[[i]][[j]])
+												tmp <- getpars(object@response[[i]][[j]])
+												pars[[j]][i,] <- tmp
 										}
-										nms <- c(nms,paste("Resp",j,1:np[j],sep="."))
+										nmsresp <- paste("Re",j,sep="")
+										nmstmp <- names(tmp)
+										if(is.null(nmstmp)) nmstmp <- 1:length(tmp)
+										nms <- c(nms,paste(nmsresp,nmstmp,sep="."))
 										allpars <- cbind(allpars,pars[[j]])					
 								}
 								rownames(allpars) <- paste("St",1:ns,sep="")
