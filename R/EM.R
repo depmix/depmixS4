@@ -83,6 +83,10 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		
 	} else {
 		# initial expectation
+		# treat missing values: FIX ME WITH NA.ALLOW OPTION OR SO. 
+		# WHY NOT USE fb TO COMPUTE LL AND GAMMA?
+		B <- object@dens
+		B <- replace(B,is.na(B) & !is.nan(B),1)
 		B <- apply(object@dens,c(1,3),prod)
 		
 		if(clsf == "hard") {
@@ -119,18 +123,20 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		}
 		
 		# expectation
+		# treat missing values: FIX ME WITH NA.ALLOW OPTION OR SO. 
+		# WHY NOT USE fb TO COMPUTE LL AND GAMMA?
+		B <- object@dens
+		B <- replace(B,is.na(B) & !is.nan(B),1)
 		B <- apply(object@dens,c(1,3),prod)
+		
 		if(clsf == "hard") {
 		  gamma <- t(apply(object@init*B,1,ind.max))
 		  LL <- sum(log(rowSums(gamma*B)))
 		} else {
-		  gamma <- object@init*B
-		  LL <- sum(log(rowSums(gamma)))
-		  # normalize
-		  gamma <- gamma/rowSums(gamma)
-	}
-	
-		# gamma <- object@init*B 		
+			fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
+			gamma <- fbo$gamma
+		  LL <- fbo$logLike
+		}
 		
 		# print stuff
 		if(verbose&((j%%5)==0)) {
