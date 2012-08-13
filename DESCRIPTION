@@ -1,6 +1,6 @@
 Package: depmixS4
 Version: 1.2-1
-Date: 2012-08-09
+Date: 2012-08-12
 Title: Dependent Mixture Models - Hidden Markov Models of GLMs and Other Distributions in S4
 Author: Ingmar Visser <i.visser@uva.nl>, Maarten Speekenbrink <m.speekenbrink@ucl.ac.uk>
 Maintainer: Ingmar Visser <i.visser@uva.nl>
