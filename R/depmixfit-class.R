@@ -20,6 +20,17 @@ setClass("mix.fitted",
 	contains="mix"
 )
 
+setClass("mix.fitted.classLik",
+	representation(
+	    message="character", # convergence information
+		conMat="matrix", # constraint matrix on the parameters for general linear constraints
+		lin.upper="numeric", # upper bounds for linear constraint
+		lin.lower="numeric", # lower bounds for linear constraints
+		posterior="data.frame" # posterior probabilities for the states
+	),
+	contains="mix"
+)
+
 # accessor functions
 
 setMethod("posterior","mix.fitted",
@@ -56,6 +67,15 @@ setClass("depmix.fitted",
 	contains="depmix"
 )
 
+setClass("depmix.fitted.classLik",
+	representation(message="character", # convergence information
+		conMat="matrix", # constraint matrix on the parameters for general linear constraints
+		lin.upper="numeric", # upper bounds for linear constraints
+		lin.lower="numeric", # lower bounds for linear constraints
+		posterior="data.frame" # posterior probabilities for the states
+	),
+	contains="depmix"
+)
 # accessor functions
 
 setMethod("posterior","depmix.fitted",

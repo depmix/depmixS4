@@ -36,7 +36,7 @@ em <- function(object,...) {
 }
 
 # em for lca and mixture models
-em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,classification=c("soft","hard"),...) {
+em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,classification=c("soft","hard"),na.allow=TRUE,...) {
 	
 	clsf <- match.arg(classification)
 	
@@ -73,7 +73,9 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		if(clsf == "hard") {
 		  fbo <- list()
 		  vstate <- apply(gamma,1,which.max)
-		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+		  B <- object@dens
+		  if(na.allow) B[is.na(B)] <- 1
+		  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
 		} else {
 		  fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
 		}
@@ -85,19 +87,32 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		# initial expectation
 		# treat missing values: FIX ME WITH NA.ALLOW OPTION OR SO. 
 		# WHY NOT USE fb TO COMPUTE LL AND GAMMA?
-		B <- object@dens
-		B <- replace(B,is.na(B) & !is.nan(B),1)
-		B <- apply(object@dens,c(1,3),prod)
+		fbo <- fb(init=object@init,A=matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
+				
+		#LL <- fbo$logLike
+		#if(is.nan(LL)) stop("Starting values not feasible; please provide them.")
+		
+		
+		#B <- object@dens
+		#B <- replace(B,is.na(B) & !is.nan(B),1)
+		#B <- apply(object@dens,c(1,3),prod)
 		
 		if(clsf == "hard") {
-		  gamma <- t(apply(object@init*B,1,ind.max))
-      LL <- sum(log(rowSums(gamma*B)))
-		} else {
-		  gamma <- object@init*B
-		  LL <- sum(log(rowSums(gamma)))
-		  gamma <- gamma/rowSums(gamma)
-		}
-		
+		  #gamma <- t(apply(object@init*B,1,ind.max))
+          #LL <- sum(log(rowSums(gamma*B)))
+          fbo$gamma <- t(apply(fbo$gamma,1,ind.max))
+		  vstate <- apply(fbo$gamma,1,which.max)
+		  B <- object@dens
+		  if(na.allow) B[is.na(B)] <- 1
+		  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+          
+          #LL <- sum(log(rowSums(gamma*B)))
+		} #else {
+		  #gamma <- object@init*B
+		  #LL <- sum(log(rowSums(gamma)))
+		  #gamma <- gamma/rowSums(gamma)
+		#}
+		LL <- fbo$logLike
 		if(is.nan(LL)) stop("Starting values not feasible; please provide them.")
 		
 	}
@@ -110,13 +125,13 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		
 		# should become object@prior <- fit(object@prior)
 		
-		object@prior@y <- gamma[bt,,drop=FALSE]
+		object@prior@y <- fbo$gamma[bt,,drop=FALSE]
 		object@prior <- fit(object@prior, w=NULL,ntimes=NULL)
 		object@init <- dens(object@prior)
 		
 		for(i in 1:ns) {
 			for(k in 1:nresp(object)) {
-				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=gamma[,i])
+				object@response[[i]][[k]] <- fit(object@response[[i]][[k]],w=fbo$gamma[,i])
 				# update dens slot of the model
 				object@dens[,k,i] <- dens(object@response[[i]][[k]])
 			}
@@ -125,19 +140,24 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 		# expectation
 		# treat missing values: FIX ME WITH NA.ALLOW OPTION OR SO. 
 		# WHY NOT USE fb TO COMPUTE LL AND GAMMA?
-		B <- object@dens
-		B <- replace(B,is.na(B) & !is.nan(B),1)
-		B <- apply(object@dens,c(1,3),prod)
+		#B <- object@dens
+		#B <- replace(B,is.na(B) & !is.nan(B),1)
+		#B <- apply(object@dens,c(1,3),prod)
 		
+		fbo <- fb(init=object@init,A=matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
 		if(clsf == "hard") {
-		  gamma <- t(apply(object@init*B,1,ind.max))
-		  LL <- sum(log(rowSums(gamma*B)))
-		} else {
-			fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
-			gamma <- fbo$gamma
-		  LL <- fbo$logLike
-		}
-		
+		  fbo$gamma <- t(apply(fbo$gamma,1,ind.max))
+		  vstate <- apply(fbo$gamma,1,which.max)
+		  B <- object@dens
+		  if(na.allow) B[is.na(B)] <- 1
+		  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+		  #LL <- sum(log(rowSums(gamma*B)))
+		} #else {
+		#	fbo <- fb(init=object@init,matrix(0,1,1),B=object@dens,ntimes=ntimes(object))
+		#	gamma <- fbo$gamma
+		#  LL <- fbo$logLike
+		#}
+		LL <- fbo$logLike
 		# print stuff
 		if(verbose&((j%%5)==0)) {
 			cat("iteration",j,"logLik:",LL,"\n")
@@ -158,7 +178,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 
 	}
 
-	class(object) <- "mix.fitted"
+	if(clsf == "hard") class(object) <- "mix.fitted.classLik" else class(object) <- "mix.fitted"
 
 	if(converge) {
 	  if(clsf == "hard") {
@@ -267,7 +287,6 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		trm <- matrix(0,ns,ns)
 		for(i in 1:ns) {
 			if(!object@stationary) {
-
 				object@transition[[i]]@y <- fbo$xi[,,i]/fbo$gamma[,i]
 				object@transition[[i]] <- fit(object@transition[[i]],w=as.matrix(fbo$gamma[,i]),ntimes=ntimes(object)) # check this
 			} else {
@@ -323,7 +342,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		
 	}
 		
-	class(object) <- "depmix.fitted"
+	if(clsf == "hard") class(object) <- "depmix.fitted.classLik" else class(object) <- "depmix.fitted"
 	
 	if(converge) {
 	    if(clsf == "hard") {
