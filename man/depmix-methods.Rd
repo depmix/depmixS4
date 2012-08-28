@@ -8,6 +8,9 @@
 \alias{logLik,depmix-method}
 \alias{logLik,mix-method}
 
+\alias{logLik,depmix.fitted.classLik-method}
+\alias{logLik,mix.fitted.classLik-method}
+
 \alias{nobs}
 \alias{nobs,depmix-method}
 \alias{nobs,mix-method}
@@ -45,8 +48,11 @@ Various methods for \code{depmix} and \code{mix} objects.
 
 \usage{
 	
-	\S4method{logLik}{depmix}(object,method="fb")
-	\S4method{logLik}{mix}(object,method="fb")
+	\S4method{logLik}{depmix}(object,method=c("fb","lystig","classification"),na.allow=TRUE)
+	\S4method{logLik}{mix}(object,method=c("fb","lystig","classification"),na.allow=TRUE)
+	
+	\S4method{logLik}{depmix.fitted.classLik}(object,method=c("classification","fb","lystig"),na.allow=TRUE)
+	\S4method{logLik}{mix.fitted.classLik}(object,method=c("classification","fb","lystig"),na.allow=TRUE)
 	
 	\S4method{nobs}{depmix}(object, ...)
 	\S4method{nobs}{mix}(object, ...)
@@ -74,12 +80,23 @@ Various methods for \code{depmix} and \code{mix} objects.
   the example.}
 
   \item{method}{The log likelihood can be computed by either the forward
-  backward algorithm from Rabiner, 1989, or by the method of Lystig and
-  Hughes, 2002.  The latter is the default as it is faster because in the
-  forward backward routine the state and transition smoothed probabilities
-  are also computed which are not neccessary for the log likelihood.  Those
-  smoothed variables, and the forward and backward variables are accessible
-  through the \code{\link{forwardbackward}} function.} 
+  backward algorithm (Rabiner, 1989), or by the method of Lystig and
+  Hughes, 2002. The former is the default and implemented in a fast
+  C routine. The forward-backward routine also computes the state and transition 
+  smoothed probabilities, which are not directly neccessary for the log likelihood.  
+  Those smoothed variables, and the forward and backward variables are accessible
+  through the \code{\link{forwardbackward}} function. When method="classification",
+  the classification likelihood is computed, which is the likelihood of the data 
+  assuming the state sequence is known and equal to the maximum a posteriori state 
+  sequence. The MAP state sequence is available through the \code{\link{viterbi}}
+  function. The classification likelihood is comuted by default when calling the 
+  logLik method on an a model fitted by maximising the classification likelihood.}
+  
+  \item{na.allow}{Allow missing observations? When set to FALSE,
+  the logLik method will return NA in the presence of missing observations. 
+  When set to TRUE, missing values will be ignored when computing the likelihood.
+  When observations are partly missing (when a multivariate observation has missing
+  values on only some of its dimensionis), this may give unexpected results.}
 
 	\item{which}{\code{getpars} function: The default "pars" returns a vector
 	of all parameters of a \code{depmix} object; the alternative value

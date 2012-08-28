@@ -178,7 +178,13 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 
 	}
 
-	if(clsf == "hard") class(object) <- "mix.fitted.classLik" else class(object) <- "mix.fitted"
+	if(clsf == "hard") {
+	    class(object) <- "mix.fitted.classLik"
+	    data.frame(state=viterbi(object)[,1])
+	} else {
+	    class(object) <- "mix.fitted"
+	    object@posterior <- viterbi(object)
+	}
 
 	if(converge) {
 	  if(clsf == "hard") {
@@ -206,7 +212,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 }
 
 # em for hidden markov models
-em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,classification=c("soft","hard"),...) {
+em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,verbose=FALSE,classification=c("soft","hard"),na.allow=TRUE,...) {
 	
 	if(!is(object,"depmix")) stop("object is not of class 'depmix'")
 	
@@ -243,12 +249,14 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		
 		# initial expectation
 	  if(clsf == "hard") {
-	    fbo <- list()
+	      fbo <- list()
 		  vstate <- viterbi(object)[,1]
 		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate,levels=1:ns) - 1))
 		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
 		  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
-		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+		  B <- object@dens
+		  if(na.allow) B[is.na(B)] <- 1
+		  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
 		} else {
 		  fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
 		}
@@ -264,7 +272,9 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate,levels=1:ns) - 1))
 		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
 		  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
-		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+		  B <- object@dens
+		  if(na.allow) B[is.na(B)] <- 1
+		  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
 		} else {
 		  fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)
 	  }
@@ -318,7 +328,9 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate,levels=1:ns) - 1))
 		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
 		  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
-		  fbo$logLike <- sum(log((apply(object@dens,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
+		  B <- object@dens
+		  if(na.allow) B[is.na(B)] <- 1
+		  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
 		} else {
 		  # expectation
 		  fbo <- fb(init=object@init,A=object@trDens,B=object@dens,ntimes=ntimes(object),stationary=object@stationary)	  
@@ -342,7 +354,13 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 		
 	}
 		
-	if(clsf == "hard") class(object) <- "depmix.fitted.classLik" else class(object) <- "depmix.fitted"
+	if(clsf == "hard") {
+	    class(object) <- "depmix.fitted.classLik"
+	    object@posterior <- data.frame(state=viterbi(object)[,1])
+	} else {
+	    class(object) <- "depmix.fitted"
+	    object@posterior <- viterbi(object)
+	}
 	
 	if(converge) {
 	    if(clsf == "hard") {

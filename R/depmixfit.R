@@ -222,9 +222,11 @@ setMethod("fit",
 			object@lin.upper <- lin.u
 			object@lin.lower <- lin.l
 			
+			object@posterior <- viterbi(object)
+			
 		}
 		
-		object@posterior <- viterbi(object)
+		
 		
 		return(object)
 	}
