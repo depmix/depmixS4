@@ -64,11 +64,11 @@ setMethod("fit",
 			# set those fixed parameters in the appropriate submodels
 			object <- setpars(object,fixed,which="fixed")			
 			
-		    # get the full set of parameters
-		    allpars <- getpars(object)
-						
+			# get the full set of parameters
+			allpars <- getpars(object)
+			
 			# get the reduced set of parameters, ie the ones that will be optimized
-		    pars <- allpars[!fixed]
+			pars <- allpars[!fixed]
 		    
 			constraints <- getConstraints(object)
 			
