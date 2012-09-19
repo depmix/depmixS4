@@ -408,31 +408,55 @@ setMethod("summary","depmix",
 								}
 						} else {
 								cat("Response parameters \n")
+																
 								for(j in 1:object@nresp) {
 										cat("Resp",j, ":", object@response[[1]][[j]]@family$family, "\n")
 								}
 								pars <- list()
 								np <- numeric(object@nresp)
+								# get the parameter names
+								allparnames <- list()
+								parnames <- list() # for renaming empty names
 								for(j in 1:object@nresp) {
-										np[j] <- npar(object@response[[1]][[j]]) # this will not always work!
+								    parnames[[j]] <- list()
+								    nms <- character()
+								    for(i in 1:ns) {
+								        tnms <- names(getpars(object@response[[i]][[j]]))
+								        if(any(tnms == "")) {
+								            tnms[tnms == ""] <- paste("noname",1:sum(tnms == ""),sep="") # assume unnamed parameters are the same between
+								           
+								        }
+								        parnames[[j]][[i]] <- tnms
+								        nms <- c(nms,tnms)
+								    }
+								    allparnames[[j]] <- unique(nms)
+								}
+								
+								
+								for(j in 1:object@nresp) {
+										#np[j] <- npar(object@response[[1]][[j]]) # this will not always work!
+										np[j] <- length(allparnames[[j]]) 
 										pars[[j]] <- matrix(,nr=ns,nc=np[j])
+										colnames(pars[[j]]) <- allparnames[[j]]
 								}
 								allpars <- matrix(,nr=ns,nc=0)
 								nms <- c()
 								for(j in 1:object@nresp) {
 										for(i in 1:ns) {
 												tmp <- getpars(object@response[[i]][[j]])
-												pars[[j]][i,] <- tmp
+												#pars[[j]][i,] <- tmp
+												pars[[j]][i,parnames[[j]][[i]]] <- tmp
 										}
 										nmsresp <- paste("Re",j,sep="")
-										nmstmp <- names(tmp)
+										#nmstmp <- names(tmp)
+										nmstmp <- allparnames[[j]]
 										if(is.null(nmstmp)) nmstmp <- 1:length(tmp)
 										nms <- c(nms,paste(nmsresp,nmstmp,sep="."))
 										allpars <- cbind(allpars,pars[[j]])					
 								}
 								rownames(allpars) <- paste("St",1:ns,sep="")
 								colnames(allpars) <- nms
-								print(allpars)
+								print(allpars,na.print=".")
 						}
 				}
 		}
