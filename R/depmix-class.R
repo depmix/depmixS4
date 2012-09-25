@@ -408,9 +408,8 @@ setMethod("summary","depmix",
 								}
 						} else {
 								cat("Response parameters \n")
-																
 								for(j in 1:object@nresp) {
-										cat("Resp",j, ":", object@response[[1]][[j]]@family$family, "\n")
+										if("family" %in% slotNames(object@response[[1]][[j]])) cat("Resp",j, ":", object@response[[1]][[j]]@family$family, "\n")
 								}
 								pars <- list()
 								np <- numeric(object@nresp)
@@ -422,9 +421,9 @@ setMethod("summary","depmix",
 								    nms <- character()
 								    for(i in 1:ns) {
 								        tnms <- names(getpars(object@response[[i]][[j]]))
+												if(is.null(tnms)) tnms=""
 								        if(any(tnms == "")) {
 								            tnms[tnms == ""] <- paste("noname",1:sum(tnms == ""),sep="") # assume unnamed parameters are the same between
-								           
 								        }
 								        parnames[[j]][[i]] <- tnms
 								        nms <- c(nms,tnms)
