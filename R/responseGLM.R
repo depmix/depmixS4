@@ -240,7 +240,9 @@ setMethod("fit","GLMresponse",
 	function(object,w) {
     if(missing(w)) w <- NULL
 		pars <- object@parameters
-		fit <- glm.fit(x=object@x,y=object@y,weights=w,family=object@family,start=pars$coefficients)
+    start <- pars$coefficients
+    start[is.na(start)] <- 0
+		fit <- glm.fit(x=object@x,y=object@y,weights=w,family=object@family,start=start)
 		pars$coefficients <- fit$coefficients
 		object <- setpars(object,unlist(pars))
 		object
@@ -255,6 +257,11 @@ setMethod("logLik","GLMresponse",
 
 setMethod("predict","GLMresponse",
 	function(object) {
-		object@family$linkinv(object@x%*%object@parameters$coefficients)
+	  nas <- is.na(object@parameters$coefficients)
+    if(sum(nas) == 0) {
+      object@family$linkinv(object@x%*%object@parameters$coefficients)
+    } else {
+		  object@family$linkinv(as.matrix(object@x[,!nas])%*%object@parameters$coefficients[!nas])
+    }
 	}
 )
