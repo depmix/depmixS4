@@ -179,10 +179,10 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRUE,v
 	}
 
 	if(clsf == "hard") {
-	    class(object) <- "mix.fitted.classLik"
-	    data.frame(state=viterbi(object)[,1])
+	    object <- as(object,"mix.fitted.classLik") # class(object) <- "mix.fitted.classLik"
+	    object@posterior <- data.frame(state=viterbi(object)[,1])
 	} else {
-	    class(object) <- "mix.fitted"
+	    object <- as(object,"mix.fitted") # class(object) <- "mix.fitted"
 	    object@posterior <- viterbi(object)
 	}
 
@@ -355,10 +355,10 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit="relative",random.start=TRU
 	}
 		
 	if(clsf == "hard") {
-	    class(object) <- "depmix.fitted.classLik"
+	    object <- as(object,"depmix.fitted.classLik") # class(object) <- "depmix.fitted.classLik"
 	    object@posterior <- data.frame(state=viterbi(object)[,1])
 	} else {
-	    class(object) <- "depmix.fitted"
+	    object <- as(object,"depmix.fitted") #  class(object) <- "depmix.fitted"
 	    object@posterior <- viterbi(object)
 	}
 	
