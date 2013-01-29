@@ -82,7 +82,7 @@ setMethod("simulate",signature(object="mix"),
 		# random generation is slow when done separately for each t, so first draw
 		# variates for all t, and then determine state sequences iteratively
 		states <- array(,dim=c(nt,nsim))
-		states[bt,] <- simulate(object@prior,n=nsim,is.prior=T)
+		states[bt,] <- simulate(object@prior,nsim=nsim,is.prior=TRUE)
 		sims <- array(,dim=c(nt,ns,nsim))
 				
 		states <- as.vector(states)
@@ -281,7 +281,7 @@ setMethod("simulate",signature(object="depmix"),
 		# random generation is slow when done separately for each t, so first draw
 		#   variates for all t, and then determine state sequences iteratively
 		states <- array(,dim=c(nt,nsim))
-		states[bt,] <- simulate(object@prior,n=nsim,is.prior=T)
+		states[bt,] <- simulate(object@prior,nsim=nsim,is.prior=TRUE)
 		sims <- array(,dim=c(nt,ns,nsim))
 		for(i in 1:ns) {
 			if(is.stationary(object)) {

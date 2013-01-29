@@ -33,6 +33,18 @@ Minor changes
 		probabilities and transition models (with identity link) are now set to
 		zero to speed-up convergence.  Current threshold is 1e-6. 
 
+Changes in depmixS4 version 1.2-2
+
+  o Changed class assignment of depmix.fitted object using as(). 
+
+  o Fixed a bug in the fit method of depmix models: linear inequality 
+    constraints were not passed on to rsolnp (thanks to Peiming Wang for 
+	  bringing this to my attention). 
+
+Changes in depmixS4 version 1.2-1
+
+  o Fixed a bug in handling of missing values for mix models
+
 Changes in depmixS4 version 1.2-0
 
 Major changes
