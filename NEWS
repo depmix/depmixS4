@@ -5,7 +5,10 @@ Major changes
 	o The EM algorithm has gained an extra argument 'classification',
 		passed from the 'fit' function using argument 'emcontrol', to allow a
 		choice between maximising the regular (classification="soft", the
-		default) or classification (classification="hard") likelihood.
+		default) or classification (classification="hard") likelihood. 
+		WARNING: using the classification likelihood combined with random 
+		starting values may easily lead to unstable results; use with 
+		caution. 
 
 	o Parameters are now given proper names, following the glm() scheme
 		(e.g. '(Intercept)', 'x1', et cetera); with this, the show and summary
