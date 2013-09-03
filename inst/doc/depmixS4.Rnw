@@ -619,8 +619,8 @@ summary(fm, which = "response")
 @
 
 As can be seen, state 1 has fast response times and accuracy is
-approximately at chance level (.474), whereas state 2 corresponds with
-slower responding at higher accuracy levels (.904).
+approximately at chance level (.4747), whereas state 2 corresponds with
+slower responding at higher accuracy levels (.9021).
 
 Note that by specifying multivariate observations in terms of a list,
 the variables are considered conditionally independent (given the
