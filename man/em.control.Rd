@@ -61,7 +61,8 @@ are assigned to states with a weight equal to the posterior probability of
 the state. When using hard classification, observations are assigned to states
 according to the maximum a posteriori (MAP) states (i.e., each observation
 is assigned to one state, which is determined by the Viterbi algorithm in the
-case of \code{depmix} models).
+case of \code{depmix} models). Warning: hard classification is mainly 
+implemented for testing purposes and its use is currently not advised.
 
 }
 

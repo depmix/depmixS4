@@ -25,16 +25,21 @@ Minor changes
     the first level of a factor is treated as a failure, and the remaining
     levels as successes.
 
-	o Un-fitted models now also have a summary method, which is identical to 
+  o Un-fitted models now also have a summary method, which is identical to 
     the show method for these models.  
 
   o Added function getmodel(object) to select submodels of a full mix or 
-	  depmix model, eg to use in deriving predictions, getting at parameter 
-		values, et cetera. 
+    depmix model, eg to use in deriving predictions, getting at parameter 
+    values, et cetera. 
 
-	o Small parameter values in multinomial response models and the initial
-		probabilities and transition models (with identity link) are now set to
-		zero to speed-up convergence.  Current threshold is 1e-6. 
+  o Small parameter values in multinomial response models and the initial
+    probabilities and transition models (with identity link) are now set to
+    zero to speed-up convergence.  Current threshold is 1e-6.
+  
+  o Updated the EM routines to make local copies of objects slots to 
+    avoid repeatedly copying large objects. Thanks to Robert McGehee for 
+    this suggestion.
+    
 
 Changes in depmixS4 version 1.2-2
 
