@@ -222,6 +222,11 @@ free <- c(0,0,rep(c(0,1),4),1,1,0,0,1,1,1,1)
 # fit the model
 fmod2 <- fit(mod2,fixed=!free)
 
+# fit the same model but use Rdonlp2 package with some tweaks
+\dontrun{
+fmod2 <- fit(mod2,fixed=!free,method="donlp",donlpcntr=donlp2Control(te0=FALSE))
+}
+
 # likelihood ratio insignificant, hence fmod2 better than fmod1
 llratio(fmod1,fmod2)
 
