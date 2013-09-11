@@ -6,13 +6,8 @@ setMethod("fit",
 				conrows=NULL,conrows.upper=0,conrows.lower=0,
 				method=NULL,verbose=TRUE,
 				emcontrol=em.control(),
-				solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-5, tol = 1e-6),
-				donlpcntrl=list(iterma = 4000, nstep = 20, fnscale = 1, report = TRUE, 
-        	rep.freq = 1, tau0 = 1, tau = 0.1, del0 = 1, epsx = 1e-06, 
-					delmin = 0.1, epsdif = 1e-08, nreset.multiplier = 1, 
-					difftype = 2, epsfcn = 1e-16, taubnd = 1, hessian = FALSE, 
-					te0 = TRUE, te1 = FALSE, te2 = FALSE, te3 = FALSE, silent = TRUE, 
-					intakt = TRUE),		
+				solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-7, tol = 1e-8),
+				donlpcntrl=donlp2Control(),		
 				...) {
 	
 		fi <- !is.null(fixed)
@@ -122,7 +117,7 @@ setMethod("fit",
 				allpars[!fixed] <- pars
 				object <- setpars(object,allpars)
 				ans = -as.numeric(logLik(object))
-				if(is.na(ans)) ans = 100000 # remove magic number here
+				if(is.na(ans)) ans = 100000 # remove magic number here!!!!!!!
 				ans
 			}
 			
