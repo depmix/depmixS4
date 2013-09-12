@@ -34,7 +34,7 @@
 		conrows=NULL, conrows.upper=0, conrows.lower=0, 
 		method=NULL, verbose=TRUE,
 		emcontrol=em.control(),
-		solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-5, tol = 1e-6),
+		solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-7, tol = 1e-8),
 		donlpcntrl=donlp2Control(),
 		...)
 	
