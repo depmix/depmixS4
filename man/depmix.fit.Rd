@@ -68,7 +68,9 @@
 	  see \code{\link{solnp}} for explanation and defaults used there.}
 	
 	\item{donlpcntrl}{Control parameters passed to 'donlp' optimizer; see
-	\code{?donlp2Control} for explanation and defaults used there.}
+	\code{?donlp2Control} for explanation and defaults used there; this can 
+		be used to tweak optimization but note that extra output is not 
+		returned.}
 	
 	\item{which}{Should summaries be provided for "all" submodels? Options 
 		are "prior", "response", and for fitted depmix models also "transition".}
