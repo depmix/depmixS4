@@ -236,24 +236,15 @@ fdm2 <- fit(dm2)
 # Volatility of S & P 500 returns
 # (thanks to Chen Haibo for providing this example)
 
-require(TTR)
-
-# load SP500 returns
-Sys.setenv(tz='UTC')
-
-sp500 <- getYahooData('^GSPC',start=19500101,end=20110731,freq='daily')
-ep <- endpoints(sp500, on="months", k=1)
-sp500 <- sp500[ep[2:(length(ep)-1)]]
-sp500$sp500_ret <- log(sp500$Close) - lag(log(sp500$Close))
-sp500 <- na.exclude(sp500)
+data(sp500)
 
 # fit some models
-mod <- depmix(sp500_ret~1,nstates=2,data=sp500)
-set.seed(2)
+mod <- depmix(logret~1,nstates=2,data=sp500)
+set.seed(1)
 fm2 <- fit(mod)	
 
-# plot BIC and posterior state sequence for the 2-state model
-plot(as.ts(posterior(fm2)[,3]),ylab="probability",main="Posterior probability of state 2 (volatile, negative markets).")
+# plot posterior state sequence for the 2-state model
+plot(as.ts(posterior(fm2)[,2]),ylab="probability",main="Posterior probability of state 1 (volatile, negative markets).")
 
 # using "hard" assignment of observations to the states, we can maximise the
 # classification likelihood instead of the usual marginal likelihood
