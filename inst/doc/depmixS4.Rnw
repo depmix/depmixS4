@@ -1069,7 +1069,7 @@ Finally, we put everything together using \code{makeDepmix} and fit
 the model: 
 <<>>=
 mod <- makeDepmix(response = rModels, transition = transition,
-  prior = inMod, stat = FALSE)
+  prior = inMod, homogeneous = FALSE)
 fm <- fit(mod, verbose = FALSE, emc=em.control(rand=FALSE))
 @
 

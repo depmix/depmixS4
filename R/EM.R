@@ -24,7 +24,7 @@ ind.max <- function(x) {
     out
 }
 
-emviterbi <- function(A,B,init,ntimes,nstates,stationary,na.allow=TRUE) {
+emviterbi <- function(A,B,init,ntimes,nstates,homogeneous,na.allow=TRUE) {
     # used for EM with hard classification, so that we don't need to change the object...
     # returns the most likely state sequence
     nt <- sum(ntimes)
@@ -53,7 +53,7 @@ emviterbi <- function(A,B,init,ntimes,nstates,stationary,na.allow=TRUE) {
       if(ntimes[case]>1) {
         for(tt in ((bt[case]+1):et[case])) {
           for(j in 1:ns) {
-            if(!stationary) {
+            if(!homogeneous) {
               delta[tt,j] <- max(delta[tt-1,]*(A[tt,j,]))*B[tt,j]
               k <- which.max(delta[tt-1,]*A[tt,j,])
             } else {
@@ -288,7 +288,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 	# initial expectation
   if(clsf == "hard") {
     fbo <- list()
-	  vstate <- emviterbi(A=trDens,B=dens,init=init,ntimes=object@ntimes,nstates=ns,stationary=object@stationary,na.allow=na.allow)[,1]
+	  vstate <- emviterbi(A=trDens,B=dens,init=init,ntimes=object@ntimes,nstates=ns,homogeneous=object@homogeneous,na.allow=na.allow)[,1]
 	  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate,levels=1:ns) - 1))
 	  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
 	  fbo$xi[cbind(1:(sum(ntimes)- 1),vstate[-1],vstate[-length(vstate)])] <- 1
@@ -296,7 +296,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 	  if(na.allow) B[is.na(B)] <- 1
 	  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
 	} else {
-	  fbo <- fb(init=init,A=trDens,B=dens,ntimes=ntimes(object),stationary=object@stationary)
+	  fbo <- fb(init=init,A=trDens,B=dens,ntimes=ntimes(object),homogeneous=object@homogeneous)
   }
 	LL <- fbo$logLike
 	if(is.nan(LL)) stop("Starting values not feasible; please provide them.")
@@ -312,7 +312,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 				
 		trm <- matrix(0,ns,ns)
 		for(i in 1:ns) {
-			if(!object@stationary) {
+			if(!object@homogeneous) {
 				transition[[i]]@y <- fbo$xi[,,i]/fbo$gamma[,i]
 				transition[[i]] <- fit(transition[[i]],w=as.matrix(fbo$gamma[,i]),ntimes=ntimes(object)) # check this
 			} else {
@@ -341,7 +341,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 		
 		if(clsf == "hard") {
       fbo <- list()
-      vstate <- emviterbi(A=trDens,B=dens,init=init,ntimes=object@ntimes,nstates=ns,stationary=object@stationary,na.allow=na.allow)[,1]
+      vstate <- emviterbi(A=trDens,B=dens,init=init,ntimes=object@ntimes,nstates=ns,homogeneous=object@homogeneous,na.allow=na.allow)[,1]
 		  #vstate <- viterbi(object)[,1]
 		  fbo$gamma <- as.matrix(model.matrix(~ factor(vstate,levels=1:ns) - 1))
 		  fbo$xi <- array(0,dim=c(sum(ntimes),ns,ns))
@@ -351,7 +351,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 		  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)]))
 		} else {
 		  # expectation
-		  fbo <- fb(init=init,A=trDens,B=dens,ntimes=ntimes(object),stationary=object@stationary)	  
+		  fbo <- fb(init=init,A=trDens,B=dens,ntimes=ntimes(object),homogeneous=object@homogeneous)	  
 	  }
 	  
 	  LL <- fbo$logLike	

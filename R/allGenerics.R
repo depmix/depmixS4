@@ -44,7 +44,7 @@ setGeneric("nlin", function(object, ...) standardGeneric("nlin"))
 
 setGeneric("getConstraints", function(object, ...) standardGeneric("getConstraints"))
 
-setGeneric("is.stationary", function(object,...) standardGeneric("is.stationary"))
+setGeneric("is.homogeneous", function(object,...) standardGeneric("is.homogeneous"))
 
 setGeneric("setpars", function(object,values,which="pars",...) standardGeneric("setpars"))
 

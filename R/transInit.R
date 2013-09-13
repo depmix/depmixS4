@@ -186,7 +186,7 @@ setMethod("simulate",signature(object="transInit"),
 			return(states)
 		} else {
 			if(missing(times)) {
-				# this is likely to be a stationary model...???
+				# this is likely to be a homogeneous model...???
 				pr <- predict(object)
 			} else {
 				pr <- predict(object)[times,]

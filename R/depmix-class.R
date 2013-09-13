@@ -44,7 +44,7 @@ setMethod("nresp","mix",
 	function(object) return(object@nresp)
 )
 
-setMethod("is.stationary",signature(object="mix"),
+setMethod("is.homogeneous",signature(object="mix"),
   function(object) {
 		return(TRUE)
 	}
@@ -223,7 +223,7 @@ setMethod("summary","mix",
 setClass("depmix",
 	representation(transition="list", # transition models (multinomial logistic)
 		trDens="array", # transition densities (A)
-		stationary="logical"
+		homogeneous="logical"
 	),
 	contains="mix"
 )
@@ -256,9 +256,9 @@ setMethod("getmodel","depmix",
 		}
 )
 
-setMethod("is.stationary",signature(object="depmix"),
+setMethod("is.homogeneous",signature(object="depmix"),
   function(object) {
-		return(object@stationary)
+		return(object@homogeneous)
 	}
 )
 
@@ -284,7 +284,7 @@ setMethod("simulate",signature(object="depmix"),
 		states[bt,] <- simulate(object@prior,nsim=nsim,is.prior=TRUE)
 		sims <- array(,dim=c(nt,ns,nsim))
 		for(i in 1:ns) {
-			if(is.stationary(object)) {
+			if(is.homogeneous(object)) {
 				# TODO: this is a temporary fix!!! 
 				sims[,i,] <- simulate(object@transition[[i]],nsim=nsim,times=rep(1,nt))
 			} else {
@@ -315,7 +315,7 @@ setMethod("simulate",signature(object="depmix"),
 		
 		object@prior@x <- as.matrix(apply(object@prior@x,2,rep,nsim))
 		for(j in 1:ns) {
-			if(!is.stationary(object)) object@transition[[j]]@x <- as.matrix(apply(object@transition[[j]]@x,2,rep,nsim))
+			if(!is.homogeneous(object)) object@transition[[j]]@x <- as.matrix(apply(object@transition[[j]]@x,2,rep,nsim))
 			for(i in 1:nr) {
 				object@response[[j]][[i]]@y <- as.matrix(responses[[i]])
 				object@response[[j]][[i]]@x <- as.matrix(apply(object@response[[j]][[i]]@x,2,rep,nsim))
@@ -325,7 +325,7 @@ setMethod("simulate",signature(object="depmix"),
 		
 		# make appropriate array for transition densities
 		nt <- sum(object@ntimes)
-		if(is.stationary(object)) trDens <- array(0,c(1,ns,ns)) else trDens <- array(0,c(nt,ns,ns))
+		if(is.homogeneous(object)) trDens <- array(0,c(1,ns,ns)) else trDens <- array(0,c(nt,ns,ns))
 		
 		# make appropriate array for response densities
 		dns <- array(,c(nt,nr,ns))

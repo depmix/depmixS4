@@ -20,8 +20,8 @@
 
 \usage{
 	
-	makeDepmix(response, transition, prior, ntimes = NULL, stationary = TRUE, 
-    ...) 	
+	makeDepmix(response, transition, prior, ntimes = NULL, homogeneous = TRUE, 
+		stationary = NULL, ...) 	
 	
 }
 
@@ -41,9 +41,16 @@
 		independent, time series. If not specified, the responses are
 		assumed to form a single time series.}
 	
-	\item{stationary}{Logical indicating whether the transition models
+	\item{homogeneous}{Logical indicating whether the transition models
 		include time-varying covariates; used internally to determine the
 		dimensions of certain arrays, notably \code{trDens}.}
+		
+	\item{stationary}{This argument should no longer be used; if not NULL,
+		the value of stationary is copied to the homogeneous argument, with a
+		warning.  In future versions this argument may be dropped or used for
+		different purposes, i.e., for specifying models in which the initial state
+		probabilities are constrained to be the stationary distribution of the
+		transition matrix.}
 		
 	\item{...}{Not used currently.}
 		
@@ -112,7 +119,7 @@ transition[[1]] <- transInit(~Pacc,nstates=2,data=speed)
 transition[[2]] <- transInit(~Pacc,nstates=2,data=speed)
 
 inMod <- transInit(~1,ns=2,data=data.frame(rep(1,3)),family=multinomial("identity"))
-mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137),stationary=FALSE)
+mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137),homogeneous=FALSE)
 
 set.seed(3)
 fm1 <- fit(mod)
@@ -288,7 +295,7 @@ transition[[2]] <- transInit(~Pacc,nstates=2,data=speed,pstart=c(trstart[3:4],0,
 instart=c(0.5,0.5)
 inMod <- transInit(~1,ns=2,ps=instart,data=data.frame(rep(1,3)))
 
-mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137),stat=FALSE)
+mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137),homogeneous=FALSE)
 
 fm3 <- fit(mod,emc=em.control(rand=FALSE))
 summary(fm3,compact=FALSE)
