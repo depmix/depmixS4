@@ -213,10 +213,10 @@ setMethod("show","exgaus",
 )
 
 setMethod("dens","exgaus",
-    function(object,log=FALSE) {
-        dexGAUS(object@y, mu = predict(object), 
-				sigma = exp(object@parameters$sigma), nu = exp(object@parameters$nu), log = log)
-    }
+ function(object,log=FALSE) {
+   dexGAUS(object@y, mu = predict(object), 
+		sigma = exp(object@parameters$sigma), nu = exp(object@parameters$nu), log = log)
+  }
 )
 
 setMethod("getpars","response",
@@ -279,14 +279,14 @@ setMethod("predict","exgaus",
 )
 
 rModels <- list(
-		list(
-				exgaus(rt,pstart=c(5,.1,.1)),
-				GLMresponse(formula=corr~1,data=speed,family=multinomial(),pstart=c(0.5,0.5))
-		),
-		list(
-				exgaus(rt,pstart=c(6,.1,.1)),
-				GLMresponse(formula=corr~1,data=speed,family=multinomial(),pstart=c(.1,.9))
-		)
+  list(
+	  exgaus(rt,pstart=c(5,.1,.1)),
+		GLMresponse(formula=corr~1, data=speed, family=multinomial(), pstart=c(0.5,0.5))
+	),
+	list(
+		exgaus(rt,pstart=c(6,.1,.1)),
+		GLMresponse(formula=corr~1, data=speed, family=multinomial(), pstart=c(.1,.9))
+	)
 )
 
 trstart=c(0.9,0.1,0.1,0.9)
