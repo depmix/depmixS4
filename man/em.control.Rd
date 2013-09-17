@@ -58,20 +58,25 @@ given to distinguish between the states.  It is also useful for repeated
 estimation from different starting values.
 
 Argument \code{classification} is used to choose either soft (default) or
-hard classification to states. When using soft classification, observations
+hard classification of observations to states. When using soft classification, observations
 are assigned to states with a weight equal to the posterior probability of
 the state. When using hard classification, observations are assigned to states
 according to the maximum a posteriori (MAP) states (i.e., each observation
 is assigned to one state, which is determined by the Viterbi algorithm in the
-case of \code{depmix} models). Warning: hard classification is mainly 
-implemented for testing purposes and its use is currently not advised.
-
+case of \code{depmix} models). As a result, the EM algorithm will find a local
+maximum of the classification likelihood (Celeux & Govaert, 1992). 
+Warning: hard classification is an experimental feature, 
+especially for hidden Markov models, and its use is currently not advised.
 }
 
 \references{
 	Lawrence R. Rabiner (1989).  A tutorial on hidden Markov models and
 	selected applications in speech recognition.  \emph{Proceedings of
 	IEEE}, 77-2, p.  267-295.
+  
+  Gilles Celeux and Gerard Govaert (1992). A classification EM algorithm 
+  for clustering and two stochastic versions. \emph{Computational
+Statistics and Data Analysis, 14}, p. 315-332.
 }
 
 \value{
@@ -83,3 +88,17 @@ implemented for testing purposes and its use is currently not advised.
 \author{Ingmar Visser & Maarten Speekenbrink}
 
 \keyword{methods}
+
+\examples{
+# using "hard" assignment of observations to the states, we can maximise the
+# classification likelihood instead of the usual marginal likelihood
+data(speed)  
+mod <- depmix(list(rt~1,corr~1),data=speed,nstates=2,
+    family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
+set.seed(1)
+# fit the model by calling fit
+fmod <- fit(mod,emcontrol=em.control(classification="hard"))
+# can get rather different solutions with different starting values...
+set.seed(3)
+fmod2 <- fit(mod,emcontrol=em.control(classification="hard"))
+}

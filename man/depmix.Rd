@@ -247,16 +247,6 @@ fm2 <- fit(mod)
 plot(as.ts(posterior(fm2)[,2]),ylab="probability",
 main="Posterior probability of state 1 (volatile, negative markets).")
 
-# using "hard" assignment of observations to the states, we can maximise the
-# classification likelihood instead of the usual marginal likelihood
-# (this example uses the model at the start of these examples)
-data(speed)	
-mod <- depmix(list(rt~1,corr~1),data=speed,nstates=2,
-    family=list(gaussian(),multinomial("identity")),ntimes=c(168,134,137))
-set.seed(1)
-# fit the model by calling fit
-fm3 <- fit(mod,emcontrol=em.control(classification="hard"))
-
 }
 
 \keyword{methods}

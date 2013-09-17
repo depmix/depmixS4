@@ -56,7 +56,9 @@ function(object,na.allow=TRUE) {
 			}
 		}
 	}
-	
+  
+  colnames(delta) <- paste("S",1:ns,sep="")
+  
 	delta <- data.frame(state,delta) 	
 	return(delta)
 }
