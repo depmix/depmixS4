@@ -75,23 +75,15 @@ library("depmixS4")
 
 \section*{Version history}
 
+See the NEWS file for complete listings of changes; here only the 
+major changes are mentioned. 
+
 \begin{description}
-		\item[1.3-0] The EM algorithm has gained an extra argument
-		\code{classification}, passed from the \code{fit} function using
-		argument \code{emcontrol}, to allow a choice between maximising
-		the regular (\code{classification="soft"}, the default) or
-		classification (\code{classification="hard"}) likelihood.  See
-		section~???  for details.
 		
-		Parameters are now given proper names, following the \code{glm()}
-		scheme (e.g. \code{(Intercept)}, \code{x1}, et cetera); with this,
-		the \code{show} and \code{summary} methods have changed
-		considerably and now produce more compact and more readable
-		output.  The \code{summary} method (for both fitted and unfitted
-		models) now has an argument \code{compact} (\code{TRUE}
-		by default) that controls the presentation of the repsonse model
-		parameters.  The prior and transition models are now presented
-		more compactly when there are no covariates.
+		\item[1.3-0] Added option `classification' likelihood to EM; 
+		model output is now pretty-printed and parameters are given 
+		proper names; the fit function has gained arguments for fine 
+		control of using Rsolnp and Rdonlp2. 
 		
 		\item[1.2-0] Added support for missing data, see 
 		section~\ref{sec:missingdata}.
