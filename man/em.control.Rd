@@ -8,7 +8,8 @@
 
 \usage{
 	
-	em.control(maxit = 500, tol = 1e-08, crit = c("relative","absolute"), random.start = TRUE, classification = c("soft","hard"))
+	em.control(maxit = 500, tol = 1e-08, crit = c("relative","absolute"), 
+	random.start = TRUE, classification = c("soft","hard"))
 	
 }
 
@@ -40,7 +41,8 @@ The absolute likelihood criterion assumes convergence on iteration
 \eqn{i}{i} when \eqn{\log L(i) - \log L(i-1) < tol}{(log L(i) - log L(i-1)) < tol}.  
 Use \code{crit="absolute"} to invoke the latter
 convergence criterion.  Note that in that case, optimal values of the 
-tolerance parameter \code{tol} scale with the value of the log-likelihood (and these are not changed automagically). 
+tolerance parameter \code{tol} scale with the value of the log-likelihood
+(and these are not changed automagically). 
 
 Argument \code{random.start} This is used for a (limited) random
 initialization of the parameters.  In particular, if

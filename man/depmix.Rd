@@ -220,8 +220,8 @@ fm3 <- fit(m3,em=em.control(maxit=500))
 # plot the BICs to select the proper model
 plot(1:3,c(BIC(fm1),BIC(fm2),BIC(fm3)),ty="b")
 
-# similar to the binomial model, data may also be entered in multi-column format where the n for each
-# row can be different
+# similar to the binomial model, data may also be entered in 
+# multi-column format where the n for each row can be different
 dt <- data.frame(y1=c(0,1,1,2,4,5),y2=c(1,0,1,0,1,0),y3=c(4,4,3,2,1,1))
 # specify a mixture model ...
 m2 <- mix(cbind(y1,y2,y3)~1,data=dt,ns=2,family=multinomial("identity"))
@@ -244,7 +244,8 @@ set.seed(1)
 fm2 <- fit(mod)	
 
 # plot posterior state sequence for the 2-state model
-plot(as.ts(posterior(fm2)[,2]),ylab="probability",main="Posterior probability of state 1 (volatile, negative markets).")
+plot(as.ts(posterior(fm2)[,2]),ylab="probability",
+main="Posterior probability of state 1 (volatile, negative markets).")
 
 # using "hard" assignment of observations to the states, we can maximise the
 # classification likelihood instead of the usual marginal likelihood

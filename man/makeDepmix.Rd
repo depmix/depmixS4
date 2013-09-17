@@ -119,7 +119,8 @@ transition[[1]] <- transInit(~Pacc,nstates=2,data=speed)
 transition[[2]] <- transInit(~Pacc,nstates=2,data=speed)
 
 inMod <- transInit(~1,ns=2,data=data.frame(rep(1,3)),family=multinomial("identity"))
-mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137),homogeneous=FALSE)
+mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,
+ntimes=c(168,134,137),homogeneous=FALSE)
 
 set.seed(3)
 fm1 <- fit(mod)
@@ -213,7 +214,8 @@ setMethod("show","exgaus",
 
 setMethod("dens","exgaus",
     function(object,log=FALSE) {
-        dexGAUS(object@y, mu = predict(object), sigma = exp(object@parameters$sigma), nu = exp(object@parameters$nu), log = log)
+        dexGAUS(object@y, mu = predict(object), 
+				sigma = exp(object@parameters$sigma), nu = exp(object@parameters$nu), log = log)
     }
 )
 
@@ -295,7 +297,8 @@ transition[[2]] <- transInit(~Pacc,nstates=2,data=speed,pstart=c(trstart[3:4],0,
 instart=c(0.5,0.5)
 inMod <- transInit(~1,ns=2,ps=instart,data=data.frame(rep(1,3)))
 
-mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137),homogeneous=FALSE)
+mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137), 
+homogeneous=FALSE)
 
 fm3 <- fit(mod,emc=em.control(rand=FALSE))
 summary(fm3,compact=FALSE)

@@ -26,7 +26,8 @@
 \usage{
 	
 	\S4method{fit}{depmix}(object, fixed=NULL, equal=NULL, conrows=NULL,
-		conrows.upper=0, conrows.lower=0, method=NULL, emcontrol=em.control(), verbose=TRUE,...)
+		conrows.upper=0, conrows.lower=0, method=NULL, emcontrol=em.control(), 
+		verbose=TRUE,...)
 	
 	\S4method{summary}{depmix.fitted}(object,which="all")
 
@@ -34,7 +35,8 @@
 		conrows=NULL, conrows.upper=0, conrows.lower=0, 
 		method=NULL, verbose=TRUE,
 		emcontrol=em.control(),
-		solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, delta = 1e-7, tol = 1e-8),
+		solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, 
+		delta = 1e-7, tol = 1e-8),
 		donlpcntrl=donlp2Control(),
 		...)
 	
@@ -268,14 +270,16 @@ fmod3b <- fit(mod3,conrows=conr,fixed=!free) # using free defined above
 data(balance)
 # four binary items on the balance scale task
 mod4 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
-	family=list(multinomial("identity"),multinomial("identity"),multinomial("identity"),multinomial("identity")))
+	family=list(multinomial("identity"),multinomial("identity"),
+	multinomial("identity"),multinomial("identity")))
 
 set.seed(1)
 fmod4 <- fit(mod4)
 
 # add age as covariate on class membership by using the prior argument
 mod5 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
-	family=list(multinomial("identity"),multinomial("identity"),multinomial("identity"),multinomial("identity")),
+	family=list(multinomial("identity"),multinomial("identity"),
+	multinomial("identity"),multinomial("identity")),
 	prior=~age, initdata=balance)
 
 set.seed(1)
