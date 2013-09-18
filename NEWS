@@ -24,6 +24,10 @@ Major changes
 	Rdonlp2; the latter is not on CRAN, and the version that depmixS4 is 
 	compatible with is from r-forge (note the licence from the package). 
 
+  o The EM algorithm is now more memory efficient and hence faster, 
+    most notably for large models and/or data; thanks to Robert McGehee
+    for generously providing these code enhancements. 
+
 Minor changes
 
   o Binomial models now treat factors in the same way as glm(); that is
