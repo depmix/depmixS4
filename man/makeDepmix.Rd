@@ -281,11 +281,13 @@ setMethod("predict","exgaus",
 rModels <- list(
   list(
 	  exgaus(rt,pstart=c(5,.1,.1)),
-		GLMresponse(formula=corr~1, data=speed, family=multinomial(), pstart=c(0.5,0.5))
+		GLMresponse(formula=corr~1, data=speed, 
+		family=multinomial("identity"), pstart=c(0.5,0.5))
 	),
 	list(
 		exgaus(rt,pstart=c(6,.1,.1)),
-		GLMresponse(formula=corr~1, data=speed, family=multinomial(), pstart=c(.1,.9))
+		GLMresponse(formula=corr~1, data=speed, 
+		family=multinomial("identity"), pstart=c(.1,.9))
 	)
 )
 
@@ -295,13 +297,13 @@ transition[[1]] <- transInit(~Pacc,nstates=2,data=speed,pstart=c(trstart[1:2],0,
 transition[[2]] <- transInit(~Pacc,nstates=2,data=speed,pstart=c(trstart[3:4],0,0))
 
 instart=c(0.5,0.5)
-inMod <- transInit(~1,ns=2,ps=instart,data=data.frame(rep(1,3)))
+inMod <- transInit(~1,ns=2,ps=instart,family=multinomial("identity"), data=data.frame(rep(1,3)))
 
 mod <- makeDepmix(response=rModels,transition=transition,prior=inMod,ntimes=c(168,134,137), 
 homogeneous=FALSE)
 
 fm3 <- fit(mod,emc=em.control(rand=FALSE))
-summary(fm3,compact=FALSE)
+summary(fm3)
 }
 
 }

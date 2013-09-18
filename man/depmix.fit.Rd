@@ -1,6 +1,7 @@
 \name{fit}
 
 \alias{fit}
+
 \alias{depmix.fit}
 \alias{fit,depmix-method}
 
@@ -19,17 +20,11 @@
 
 	\code{fit} optimizes parameters of \code{\link{depmix}} or
 	\code{\link{mix}} models, optionally subject to general linear
-	(in)equality constraints.
+	(in)equality constraints. 
 
 }
 
 \usage{
-	
-	\S4method{fit}{depmix}(object, fixed=NULL, equal=NULL, conrows=NULL,
-		conrows.upper=0, conrows.lower=0, method=NULL, emcontrol=em.control(), 
-		verbose=TRUE,...)
-	
-	\S4method{summary}{depmix.fitted}(object,which="all")
 
 	\S4method{fit}{mix}(object, fixed=NULL, equal=NULL, 
 		conrows=NULL, conrows.upper=0, conrows.lower=0, 
@@ -41,6 +36,8 @@
 		...)
 	
 	\S4method{summary}{mix.fitted}(object,which="all")
+	
+	\S4method{summary}{depmix.fitted}(object,which="all")
 
 }
 
@@ -190,7 +187,7 @@ fmod1 # to see the logLik and optimization information
 summary(fmod1)
 
 # same model, now with missing data
-
+\dontrun{
 speed[2,1] <- NA
 speed[3,2] <- NA
 
@@ -202,7 +199,14 @@ mod1ms <- depmix(list(rt~1,corr~1),data=speed,transition=~Pacc,nstates=2,
 # fit the model
 set.seed(3)
 fmod1ms <- fit(mod1ms)
+}
 
+# instead of the normal likelihood, we can also maximise the "classification" likelihood
+# this uses the maximum a posteriori state sequence to assign observations to states
+# and to compute initial and transition probabilities. 
+
+fmod1b <- fit(mod1,emcontrol=em.control(classification="hard"))
+fmod1b # to see the logLik and optimization information
 
 # FIX SOME PARAMETERS
 
@@ -226,18 +230,16 @@ free <- c(0,0,rep(c(0,1),4),1,1,0,0,1,1,1,1)
 # fit the model
 fmod2 <- fit(mod2,fixed=!free)
 
-# fit the same model but use Rdonlp2 package with some tweaks
-\dontrun{
-fmod2 <- fit(mod2,fixed=!free,method="donlp",donlpcntr=donlp2Control(te0=FALSE))
-}
-
 # likelihood ratio insignificant, hence fmod2 better than fmod1
 llratio(fmod1,fmod2)
 
-# NOW ADD SOME GENERAL LINEAR CONSTRAINTS
+
+# ADDING SOME GENERAL LINEAR CONSTRAINTS
 
 # set the starting values of this model to the optimized 
 # values of the previously fitted model to speed optimization
+
+\dontrun{
 
 pars <- c(unlist(getpars(fmod2)))
 pars[4] <- pars[8] <- -4
@@ -267,6 +269,8 @@ conr[2,10] <- -1
 # starting values
 fmod3b <- fit(mod3,conrows=conr,fixed=!free) # using free defined above
 
+}
+
 data(balance)
 # four binary items on the balance scale task
 mod4 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
@@ -275,6 +279,8 @@ mod4 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
 
 set.seed(1)
 fmod4 <- fit(mod4)
+
+\dontrun{
 
 # add age as covariate on class membership by using the prior argument
 mod5 <- mix(list(d1~1,d2~1,d3~1,d4~1), data=balance, nstates=2,
@@ -288,13 +294,7 @@ fmod5 <- fit(mod5)
 # check the likelihood ratio; adding age significantly improves the goodness-of-fit
 llratio(fmod5,fmod4)
 
-# instead of the normal likelihood, we can also maximise the "classification" likelihood
-# this uses the maximum a posteriori state sequence to assign observations to states
-# and to compute initial and transition probabilities. 
-
-fmod1b <- fit(mod1,emcontrol=em.control(classification="hard"))
-fmod1b # to see the logLik and optimization information
-
+}
 
 }
 
