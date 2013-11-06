@@ -112,12 +112,15 @@ setMethod("fit",
 				lin.l <- lin.l[-allzero]
 			}
 			
+			startLogLik <- -logLik(object)*1.01
+						
 			# make loglike function that only depends on pars
 			logl <- function(pars) {
 				allpars[!fixed] <- pars
 				object <- setpars(object,allpars)
 				ans = -as.numeric(logLik(object))
-				if(is.na(ans)) ans = 100000 # remove magic number here!!!!!!!
+				if(is.na(ans)) ans <- startLogLik 
+				if(is.infinite(ans)) ans <- startLogLik				
 				ans
 			}
 			
