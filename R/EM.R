@@ -147,6 +147,7 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 		  vstate <- apply(gamma,1,which.max)
 		  B <- dens
 		  if(na.allow) B[is.na(B)] <- 1
+		  fbo$gamma <- t(apply(gamma,1,ind.max))
 		  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)])) + sum(log(init[cbind(1:lt,vstate)]))
 		} else {
 		  fbo <- fb(init=init,matrix(0,1,1),B=dens,ntimes=ntimes(object))
