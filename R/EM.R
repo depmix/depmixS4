@@ -145,9 +145,10 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 		if(clsf == "hard") {
 		  fbo <- list()
 		  vstate <- apply(gamma,1,which.max)
+      fbo$gamma <- t(apply(gamma,1,ind.max))
 		  B <- dens
 		  if(na.allow) B[is.na(B)] <- 1
-		  fbo$gamma <- t(apply(gamma,1,ind.max))
+		  #fbo$gamma <- t(apply(gamma,1,ind.max))
 		  fbo$logLike <- sum(log((apply(B,c(1,3),prod))[cbind(1:sum(ntimes),vstate)])) + sum(log(init[cbind(1:lt,vstate)]))
 		} else {
 		  fbo <- fb(init=init,matrix(0,1,1),B=dens,ntimes=ntimes(object))
@@ -182,9 +183,11 @@ em.mix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),rando
 		
 		for(i in 1:ns) {
 			for(k in 1:nresp(object)) {
-				response[[i]][[k]] <- fit(response[[i]][[k]],w=fbo$gamma[,i])
-				# update dens slot of the model
-				dens[,k,i] <- dens(response[[i]][[k]])
+				if(sum(fbo$gamma[,i]) > 0) {
+          response[[i]][[k]] <- fit(response[[i]][[k]],w=fbo$gamma[,i])
+				  # update dens slot of the model
+				  dens[,k,i] <- dens(response[[i]][[k]])
+				}
 			}
 		}
 		
@@ -325,12 +328,18 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 		trm <- matrix(0,ns,ns)
 		for(i in 1:ns) {
 			if(!object@homogeneous) {
+        # TODO: check whether fbo$gamma > 0, otherwise set to previous value....
 				transition[[i]]@y <- fbo$xi[,,i]/fbo$gamma[,i]
 				transition[[i]] <- fit(transition[[i]],w=as.matrix(fbo$gamma[,i]),ntimes=ntimes(object)) # check this
 			} else {
-				for(k in 1:ns) {
-					trm[i,k] <- sum(fbo$xi[-c(et),k,i])/sum(fbo$gamma[-c(et),i])
-				}
+			  if(sum(fbo$gamma[-c(et),i]) == 0) {
+          # set unidentified transition probs to previous value
+          trm[i,] <- trDens[1,,i]
+			  } else {
+  				for(k in 1:ns) {
+  					trm[i,k] <- sum(fbo$xi[-c(et),k,i])/sum(fbo$gamma[-c(et),i])
+  				}
+			  }
 				# FIX THIS; it will only work with specific trinModels
 				# should become object@transition = fit(object@transition, xi, gamma)
 				transition[[i]]@parameters$coefficients <- switch(transition[[i]]@family$link,
