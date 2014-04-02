@@ -89,7 +89,8 @@ setMethod("GLMresponse",
 				if(ncol(x)>1) stop("covariates not allowed in multinomial model with identity link")
 				ncy <- ncol(y)
 				parameters$coefficients <- rep(1/ncy,ncy)
-				names(parameters$coefficients) <- paste("pr",1:ncol(y),sep="")
+				if(is.null(namesy)) names(parameters$coefficients) <- paste("pr",1:ncol(y),sep="")
+				else names(parameters$coefficients) <- namesy
 				fixed <- rep(0,ncol(y)) 
 				fixed <- c(as.logical(t(fixed)))
 				constr <- list(
