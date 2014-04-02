@@ -212,8 +212,10 @@ setMethod("getpars","GLMresponse",
 						"pars" = {
 								parameters <- numeric()
 								if(object@family$family=="multinomial"&object@family$link=="mlogit") {
-										# coefficient is usually a matrix here 
-										parameters <- c(t(object@parameters$coefficients)) # Why transpose?
+										# coefficient is usually a matrix here
+                    tmp <- object@parameters$coefficients
+										parameters <- c(t(tmp)) # Why transpose?
+										names(parameters) <- paste(rep(rownames(tmp),each=length(colnames(tmp))),colnames(tmp),sep=".")
 								} else {
 										parameters <- object@parameters$coefficients
 										if(object@family$family=="gaussian") {
