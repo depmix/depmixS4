@@ -58,6 +58,7 @@ setMethod("GLMresponse",
 		}
 		if(family$family=="multinomial") {
 			y <- model.response(mf)
+			namesy <- NULL
 			if(NCOL(y) == 1) {
 				if(is.factor(y)) {
 						namesy <- levels(y)
@@ -207,32 +208,32 @@ setMethod("setpars","GLMresponse",
 )
 
 setMethod("getpars","GLMresponse",
-		function(object,which="pars",...) {
-				switch(which,
-						"pars" = {
-								parameters <- numeric()
-								if(object@family$family=="multinomial"&object@family$link=="mlogit") {
-										# coefficient is usually a matrix here
-                    tmp <- object@parameters$coefficients
-										parameters <- c(t(tmp)) # Why transpose?
-										names(parameters) <- paste(rep(rownames(tmp),each=length(colnames(tmp))),colnames(tmp),sep=".")
-								} else {
-										parameters <- object@parameters$coefficients
-										if(object@family$family=="gaussian") {
-												nms <- names(parameters)
-												parameters <- c(parameters,object@parameters$sd)
-												names(parameters) <- c(nms,"sd")
-										}
-										
-								}
-								pars <- parameters
-						},
-						"fixed" = {
-								pars <- object@fixed
-						}
-				)
-				return(pars)
-		}
+	function(object,which="pars",...) {
+		switch(which,
+			"pars" = {
+				parameters <- numeric()
+				if(object@family$family=="multinomial"&object@family$link=="mlogit") {
+					# coefficient is usually a matrix here
+					tmp <- object@parameters$coefficients
+					parameters <- c(t(tmp)) # Why transpose?
+					names(parameters) <- paste(rep(rownames(tmp),each=length(colnames(tmp))),colnames(tmp),sep=".")
+				} else {
+					parameters <- object@parameters$coefficients
+					if(object@family$family=="gaussian") {
+						nms <- names(parameters)
+						parameters <- c(parameters,object@parameters$sd)
+						names(parameters) <- c(nms,"sd")
+					}
+					
+				}
+				pars <- parameters
+			},
+			"fixed" = {
+				pars <- object@fixed
+			}
+		)
+		return(pars)
+	}
 )
 
 # methods: fit, logDens, predict
