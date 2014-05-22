@@ -44,9 +44,9 @@
 	
 	\item{beta}{The backward variables.}
 	
-	\item{gamma}{The smoothed transition probabilities.}
+	\item{gamma}{The smoothed state probabilities.}
 	
-	\item{xi}{The smoothed state probabilities.}
+	\item{xi}{The smoothed transition probabilities.}
 	
 	\item{sca}{The scale factors (called lambda in Rabiner, 1989).}
 	
