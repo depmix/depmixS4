@@ -33,11 +33,11 @@ setMethod("fit",
 			}
 		}
 		
+		if(!(method %in% c("EM","donlp","rsolnp"))) stop("'method' argument invalid; should be one of 'EM', 'rsolnp', 'donlp'.")
+		
 		if(method=="EM") {
 			object <- em(object,maxit=emcontrol$maxit,tol=emcontrol$tol,crit=emcontrol$crit,random.start=emcontrol$random.start,classification=emcontrol$classification,verbose=verbose,...)
 		}
-		
-		if(!(method %in% c("EM","donlp","rsolnp"))) stop("'method' argument invalid; should be one of 'EM', 'rsolnp', 'donlp'.")
 		
 		if(method=="donlp"||method=="rsolnp") {
 			
@@ -84,20 +84,20 @@ setMethod("fit",
 			
 			# incorporate general linear constraints, if any
 			if(cr) {
-					if(ncol(conrows)!=npar(object)) stop("'conrows' does not have the right dimensions")
-					lincon <- rbind(lincon,conrows)
-					if(is.null(conrows.upper)) {
-							lin.u <- c(lin.u,rep(0,nrow(conrows)))
-					} else {
-							if(length(conrows.upper)!=nrow(conrows)) stop("'conrows.upper does not have correct length")
-							lin.u <- c(lin.u,conrows.upper)
-					}
-					if(is.null(conrows.lower)) {
-							lin.l <- c(lin.l,rep(0,nrow(conrows)))
-					} else {
-							if(length(conrows.lower)!=nrow(conrows)) stop("'conrows.lower does not have correct length")
-							lin.l <- c(lin.l,conrows.lower)
-					}
+				if(ncol(conrows)!=npar(object)) stop("'conrows' does not have the right dimensions")
+				lincon <- rbind(lincon,conrows)
+				if(is.null(conrows.upper)) {
+					lin.u <- c(lin.u,rep(0,nrow(conrows)))
+				} else {
+					if(length(conrows.upper)!=nrow(conrows)) stop("'conrows.upper does not have correct length")
+					lin.u <- c(lin.u,conrows.upper)
+				}
+				if(is.null(conrows.lower)) {
+					lin.l <- c(lin.l,rep(0,nrow(conrows)))
+				} else {
+					if(length(conrows.lower)!=nrow(conrows)) stop("'conrows.lower does not have correct length")
+					lin.l <- c(lin.l,conrows.lower)
+				}
 			}
 			
 			# select only those columns of the constraint matrix that correspond to non-fixed parameters

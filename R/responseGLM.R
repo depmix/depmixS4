@@ -244,8 +244,8 @@ setMethod("fit","GLMresponse",
 	function(object,w) {
     if(missing(w)) w <- NULL
 		pars <- object@parameters
-    start <- pars$coefficients
-    start[is.na(start)] <- 0
+		start <- pars$coefficients
+		start[is.na(start)] <- 0
 		fit <- glm.fit(x=object@x,y=object@y,weights=w,family=object@family,start=start)
 		pars$coefficients <- fit$coefficients
 		object <- setpars(object,unlist(pars))
