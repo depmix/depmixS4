@@ -375,7 +375,7 @@ setMethod("summary","depmix",
 		if(ans==1|ans==4) {
 			# show the transition models
 			if(object@transition[[1]]@formula==~1) {
-				cat("\nTransition matrix \n")
+				cat("Transition matrix \n")
 				pars <- getpars(object)
 				npprior <- length(getpars(object@prior))
 				trm <- matrix(pars[(npprior+1):(ns^2+npprior)],ns,ns,byr=T)
