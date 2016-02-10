@@ -7,11 +7,11 @@
 # version of forward backward routine
 
 .onLoad <- function(lib, pkg) { 
-	library.dynam("depmixS4", pkg, lib)
+    library.dynam("depmixS4", pkg, lib)
 }
 
 .onUnLoad <- function(libpath) {
-	library.dynam.unload("depmixS4",libpath)
+    library.dynam.unload("depmixS4",libpath)
 }
 
 # Guess what: all generics

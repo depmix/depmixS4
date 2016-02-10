@@ -184,9 +184,9 @@ setMethod("summary","mix",
 								np <- numeric(object@nresp)
 								for(j in 1:object@nresp) {
 										np[j] <- npar(object@response[[1]][[j]])
-										pars[[j]] <- matrix(,nr=ns,nc=np[j])
+										pars[[j]] <- matrix(,nrow=ns,ncol=np[j])
 								}
-								allpars <- matrix(,nr=ns,nc=0)
+								allpars <- matrix(,nrow=ns,ncol=0)
 								nms <- c()
 								for(j in 1:object@nresp) {
 										for(i in 1:ns) {
@@ -378,7 +378,7 @@ setMethod("summary","depmix",
 				cat("Transition matrix \n")
 				pars <- getpars(object)
 				npprior <- length(getpars(object@prior))
-				trm <- matrix(pars[(npprior+1):(ns^2+npprior)],ns,ns,byr=T)
+				trm <- matrix(pars[(npprior+1):(ns^2+npprior)],ns,ns,byrow=T)
 				if(object@transition[[1]]@family$link == "mlogit") {
 					trm <- t(apply(trm,1,object@transition[[1]]@family$linkinv,base=object@transition[[1]]@family$base))
 				}
@@ -436,10 +436,10 @@ setMethod("summary","depmix",
 			for(j in 1:object@nresp) {
 				#np[j] <- npar(object@response[[1]][[j]]) # this will not always work!
 				np[j] <- length(allparnames[[j]]) 
-				pars[[j]] <- matrix(,nr=ns,nc=np[j])
+				pars[[j]] <- matrix(,nrow=ns,ncol=np[j])
 				colnames(pars[[j]]) <- allparnames[[j]]
 			}
-			allpars <- matrix(,nr=ns,nc=0)
+			allpars <- matrix(,nrow=ns,ncol=0)
 			nms <- c()
 			for(j in 1:object@nresp) {
 				for(i in 1:ns) {

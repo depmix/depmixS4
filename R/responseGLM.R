@@ -95,7 +95,7 @@ setMethod("GLMresponse",
 				fixed <- rep(0,ncol(y)) 
 				fixed <- c(as.logical(t(fixed)))
 				constr <- list(
-					lin = matrix(1,nr=1,nc=ncol(y)),
+					lin = matrix(1,nrow=1,ncol=ncol(y)),
 					linup = 1,
 					linlow = 1,
 					parup = rep(1,ncol(y)),
