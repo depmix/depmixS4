@@ -183,6 +183,10 @@ setMethod("fit",
 		    linineq <- lincon[ineq, ,drop=FALSE]
 		    ineqLB <- lin.l[ineq]
 		    ineqUB <- lin.u[ineq]
+		    ineqfun <- function(pp) {
+			ans = as.vector(linineq%*%pp)
+			ans
+		    }
 		} else {
 		    ineqfun = NULL
 		    ineqLB=NULL
