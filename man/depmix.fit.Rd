@@ -186,6 +186,9 @@ fmod1 # to see the logLik and optimization information
 # to see the parameters
 summary(fmod1)
 
+# to see the posterior state sequence and associated delta probabilties
+pst <- posterior(fmod1)
+
 # same model, now with missing data
 \dontrun{
 speed[2,1] <- NA
