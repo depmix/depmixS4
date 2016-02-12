@@ -14,6 +14,8 @@
     library.dynam.unload("depmixS4",libpath)
 }
 
+utils::globalVariables(c("donlp2", "donlp2Control"))
+
 # Guess what: all generics
 
 setGeneric("depmix", function(response,data=NULL,nstates,transition=~1,family=gaussian(),prior=~1,initdata=NULL,

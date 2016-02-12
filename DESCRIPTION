@@ -6,7 +6,8 @@ Author: Ingmar Visser <i.visser@uva.nl>, Maarten Speekenbrink <m.speekenbrink@uc
 Maintainer: Ingmar Visser <i.visser@uva.nl>
 Depends: R (>= 3.0.1), nnet, MASS, Rsolnp
 Imports: stats, stats4, methods
-Suggests: gamlss, gamlss.dist
+Suggests: gamlss, gamlss.dist, Rdonlp2
+Additional_repositories: http://R-Forge.R-project.org
 Description: Fits latent (hidden) Markov models on mixed categorical and continuous (time series) data, otherwise known as dependent mixture models.
 License: GPL (>=2)
 URL: http://depmix.r-forge.r-project.org/

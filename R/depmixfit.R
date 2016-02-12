@@ -125,7 +125,7 @@ setMethod("fit",
 	    }
 	    
 	    if(method=="donlp") {
-		
+				
 		if(!(require(Rdonlp2,quietly=TRUE))) stop("Method 'donlp' requires package 'Rdonlp2'")
 				
 		mycontrol <- function(info) {
@@ -133,7 +133,7 @@ setMethod("fit",
 		}
 		
 		# optimize the parameters
-		result <- donlp2(pars,logl,
+		result <- Rdonlp2::donlp2(pars,logl,
 		    par.upper=par.u[!fixed],
 		    par.lower=par.l[!fixed],
 		    A=lincon,

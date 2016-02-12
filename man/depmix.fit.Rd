@@ -197,7 +197,7 @@ modNew <- depmix(list(rt~1,corr~1),data=df,transition=~Pacc,nstates=2,
 # get parameters from estimated model
 modNew <- setpars(modNew,getpars(fmod1))
 # check the state sequence and probabilities
-viterbi(modeNew)
+viterbi(modNew)
 
 # same model, now with missing data
 \dontrun{
