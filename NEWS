@@ -1,3 +1,11 @@
+Changes in depmixS4 version 1.3-4
+
+  o Fixed a bug in glm.fit which produced an error for a poisson response
+    when there were missing values. 
+	
+  o Added an example on ?fit to get posterior state sequences for new
+    or 'out-of-sample' data. 
+
 Changes in depmixS4 version 1.3-3
   
   o The underlying code for the forwardbackward function was changed from 
