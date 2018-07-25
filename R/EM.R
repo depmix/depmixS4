@@ -455,7 +455,7 @@ em.depmix <- function(object,maxit=100,tol=1e-8,crit=c("relative","absolute"),ra
 		    )
 		}
 	} else {
-	  if(likelihood_increased) {
+	  if(likelihood_decreased) {
 	    object@message <- "likelihood decreased in EM iteration; stopped without convergence."
 	  } else {
 	    object@message <- "'maxit' iterations reached in EM without convergence."
