@@ -27,9 +27,13 @@ setMethod("GLMresponse",
 		mf[[1]] <- as.name("model.frame")
 		mf <- eval(mf, parent.frame())
 		x <- model.matrix(attr(mf, "terms"),mf)
-		if(any(is.na(x))) stop("'depmixS4' does not currently handle covariates with missing data.")
 		y <- model.response(mf)
 		if(!is.matrix(y)) y <- matrix(y,ncol=1)
+		if(any(is.na(x))) {
+		  # check whether the response is also missing
+		  y_na <- apply(y,1,function(x) all(is.na(x)))
+		  if(any(is.na(x[!y_na,]))) stop("'depmixS4' does not currently handle covariates with missing data.")
+		}
 		parameters <- list()
 		constr <- NULL
 		parameters$coefficients <- vector("numeric",length=ncol(x))
