@@ -48,7 +48,7 @@ fb <- function(init,A,B,ntimes=NULL,return.all=FALSE,homogeneous=TRUE,useC=TRUE,
 		beta <- matrix(0.0,ncol=ns,nrow=nt)
 		xi <- array(0.0,dim=c(nt,ns,ns))
 		
-		res <- .C("forwardbackward",
+		res <- .C("forwardbackwardC",
 			hom=as.integer(homogeneous),
 			ns=as.integer(ns),
 			lt=as.integer(lt),
