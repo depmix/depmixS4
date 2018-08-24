@@ -8,7 +8,7 @@ Depends: R (>= 3.5.0), nnet, MASS, Rsolnp
 Imports: stats, stats4, methods
 Suggests: gamlss, gamlss.dist, Rdonlp2
 Additional_repositories: http://R-Forge.R-project.org
-Description: Fits latent (hidden) Markov models on mixed categorical and continuous (time series) data, otherwise known as dependent mixture models.
+Description: Fits latent (hidden) Markov models on mixed categorical and continuous (time series) data, otherwise known as dependent mixture models, see Visser & Speekenbrink (2010, <DOI:10.18637/jss.v036.i07>).
 License: GPL (>=2)
 URL: http://depmix.r-forge.r-project.org/
 RoxygenNote: 6.1.0
