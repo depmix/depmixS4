@@ -1,8 +1,11 @@
 # 
-# Ingmar Visser, oct 9, 2014
+# Ingmar Visser, sept 20, 2018
 # 
-# Compute a corrected hessian using
+# Compute a corrected hessian using linear constraint matrix
+# Note: the constraints should only be the linear equality constraints, not the 
+# inequality constraints!!!
 # 
+
 hess2cov <- function(hess,lincon) {
 	np <- dim(hess)[1]
 	if(!(dim(hess)[1]==dim(hess)[2])) stop("'hess' should be a square matrix")
