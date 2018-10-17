@@ -54,6 +54,8 @@ setGeneric("getpars", function(object,which="pars",...) standardGeneric("getpars
 
 setGeneric("getmodel", function(object,...) standardGeneric("getmodel"))
 
+setGeneric("hessian", function(object, ...) standardGeneric("hessian"))
+
 
 # functions 
 setGeneric("fit", function(object, ...) standardGeneric("fit"))

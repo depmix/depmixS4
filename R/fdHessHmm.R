@@ -1,6 +1,10 @@
 
 
-hess <- function(object,fixed=NULL,equal=NULL,conrows=NULL,conrows.upper=0,conrows.lower=0) {
+
+setMethod("hessian", "mix",
+    function(object,fixed=NULL,equal=NULL,
+	conrows=NULL,conrows.upper=NULL,conrows.lower=NULL,	
+	method="finiteDifferences", ...) {
 	
 	fi <- !is.null(fixed)
 	cr <- !is.null(conrows)
@@ -68,7 +72,7 @@ hess <- function(object,fixed=NULL,equal=NULL,conrows=NULL,conrows.upper=0,conro
 	
 	# select only those columns of the constraint matrix that correspond to non-fixed parameters
 	linconFull <- lincon
-	lincon <- lincon[,!fixed,drop=FALSE]			
+	lincon <- lincon[,!fixed,drop=FALSE]
 	
 	# remove redundant rows in lincon (all zeroes)
 	allzero <- which(apply(lincon,1,function(y) all(y==0)))
@@ -80,7 +84,6 @@ hess <- function(object,fixed=NULL,equal=NULL,conrows=NULL,conrows.upper=0,conro
 	
 	# TODO: remove rows of lincon with inequality constraints!!!!
 	
-	
 	# make loglike function that only depends on pars
 	logl <- function(pars) {
 		allpars[!fixed] <- pars
@@ -90,11 +93,10 @@ hess <- function(object,fixed=NULL,equal=NULL,conrows=NULL,conrows.upper=0,conro
 		ans
 	}
 	
-	return(list(fdh=fdHess(pars,logl),lin=lincon))
+	fdh <- fdHess(pars,logl)
+	
+	hess <- hessian2vcov(fdh$Hessian,lincon)
+	
+	return(hess)
 }
-
-
-
-
-
-
+)

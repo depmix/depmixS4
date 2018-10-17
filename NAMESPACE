@@ -10,13 +10,13 @@ importFrom("stats", "cov", "cov.wt", "dbinom", "dgamma", "dmultinom",
 
 importFrom(stats4, AIC, BIC, logLik, nobs, summary)
 
+importFrom(nlme, fdHess)
+
 export(	
 	makeDepmix,
 	makeMix,
 	lystig,
 	fb,
-	forwardbackward,
-	MVNresponse,
 	llratio,
 	multinomial,
 	em,
@@ -55,6 +55,7 @@ exportMethods(
 	posterior,
 	GLMresponse,
 	MVNresponse,
+	forwardbackward,
 	transInit,
 	setpars,
 	getpars,
@@ -64,7 +65,8 @@ exportMethods(
 	simulate,
 	summary,
 	logLik,
-	getmodel
+	getmodel,
+	hessian
 )
 
 useDynLib(depmixS4, .registration = TRUE)
