@@ -1,7 +1,41 @@
+# Ingmar Visser, 17 oktober 2018
+# 
+# Description
+# The function hessian computes the hessian of a (dep)mix object at the current 
+# parameter values; it has a method argument; the only method currently implemented
+# is the finite differences method. 
+#
+# Details
+# 
+# The function optionally accepts arguments related to linear constraints, which are 
+# neccessary to have when the hessian is used to compute the variance-covariance 
+# matrix of the parameters. 
+# 
+# The function also checks whether parameters are estimated on the boundary and 
+# leaves them out of the process when this is the case. 
+# 
+# Fixed parameters are similarly ignored when computing the hessian
+# 
+# Value
+#
+# The function returns a named list with the following elements:
+# 
+# hessian: the hessian of the parameters
+# 
+# elements: vector of length npar(object) indicating for each parameter whether it 
+# is 'inc'luded, 'fix'ed, or estimated on the boundary, 'bnd'; the dimension of the hessian 
+# is thus the number of non-fixed parameters minus the number of boundary parameters. 
+# 
+# lincon: the linear constraint matrix needed to compute the variance-covariance 
+# matrix; it only contains the parts of the linear constraint matrix that relate to equality 
+# constraints; moreover, the columns related to 'fix'ed and boundary ('bnd') parameters
+# are left out. 
+#
 
 setMethod("hessian", "mix",
-    function(object,fixed=NULL,equal=NULL,
-	conrows=NULL,conrows.upper=NULL,conrows.lower=NULL,	
+    function(object, fixed=NULL, equal=NULL, 
+	conrows=NULL, conrows.upper=NULL, conrows.lower=NULL, 
+	tolerance=1e-9, 	
 	method="finiteDifferences", ...) {
 
 	if(is.nan(logLik(object))) stop("Log likelihood is 'NaN'; cannot compute hessian. ")
@@ -66,12 +100,22 @@ setMethod("hessian", "mix",
 	# get the full set of parameters
 	allpars <- getpars(object)
 	
+	elements <- rep("inc",npar(object))
+	
+	# identify parameters that are on their boundary
+	low <- which(sapply(as.numeric(allpars-par.l),all.equal,tolerance=tolerance,0)==TRUE)
+	up <- which(sapply(as.numeric(allpars-par.u),all.equal,tolerance=tolerance,0)==TRUE)
+	
+	print(low)
+	print(up)
+	
+	print(which(fixed))
+	
+	print(union(low, up, fixed))
+	
 	# get the reduced set of parameters, ie the ones that the hessian will be computed for
 	# only non-fixed parameters
 	pars <- allpars[!fixed]
-	
-	# TODO: now also remove parameters that are on their boundary
-	
 	
 	# select only those columns of the constraint matrix that correspond to non-fixed parameters
 	linconFull <- lincon
@@ -103,6 +147,6 @@ setMethod("hessian", "mix",
 	# the hessian has been computed and for which this has been skipped due
 	# to being 1) fixed or 2) on the boundary
 		
-	return(list(hessian=fdh$Hessian,lincon=lincon))
+	return(list(hessian=fdh$Hessian,elements=elements,lincon=lincon))
 }
 )
