@@ -79,7 +79,7 @@ setMethod("hessian", "mix",
 		lin.l <- c(lin.l,rep(0,nrow(equal)))				
 	}
 	
-	# incorporate general linear constraints, if any
+	# incorporate general linear constraints, if any, in lincon matrix
 	if(cr) {
 		if(ncol(conrows)!=npar(object)) stop("'conrows' does not have the right dimensions")
 		lincon <- rbind(lincon,conrows)
@@ -100,26 +100,24 @@ setMethod("hessian", "mix",
 	# get the full set of parameters
 	allpars <- getpars(object)
 	
+	# return vector with specification of 'inc'luded, 'fix'ed and 'bnd'ary parameters
 	elements <- rep("inc",npar(object))
 	
 	# identify parameters that are on their boundary
 	low <- which(sapply(as.numeric(allpars-par.l),all.equal,tolerance=tolerance,0)==TRUE)
 	up <- which(sapply(as.numeric(allpars-par.u),all.equal,tolerance=tolerance,0)==TRUE)
+	bnd <- union(low, up)
 	
-	print(low)
-	print(up)
 	
-	print(which(fixed))
-	
-	print(union(low, up, fixed))
+	if(length(which(fixed)>0)) elements[which(fixed)] <- "fix"
+	if(length(bnd)>0) elements[bnd] <- "bnd"
 	
 	# get the reduced set of parameters, ie the ones that the hessian will be computed for
 	# only non-fixed parameters
-	pars <- allpars[!fixed]
+	pars <- allpars[which(elements=="inc")]
 	
 	# select only those columns of the constraint matrix that correspond to non-fixed parameters
-	linconFull <- lincon
-	lincon <- lincon[,!fixed,drop=FALSE]
+	lincon <- lincon[,which(elements=="inc"),drop=FALSE]
 	
 	# remove redundant rows in lincon (all zeroes)
 	allzero <- which(apply(lincon,1,function(y) all(y==0)))
@@ -129,15 +127,21 @@ setMethod("hessian", "mix",
 		lin.l <- lin.l[-allzero]
 	}
 	
-	# TODO: remove rows of lincon with inequality constraints!!!!
-	
+	# remove rows of lincon with inequality constraints
+	dflu <- lin.u-lin.l
+	ineq <- which(dflu!=0)
+	if(length(ineq)>0) {
+		lincon <- lincon[-ineq,,drop=FALSE]
+		lin.u <- lin.u[-ineq]
+		lin.l <- lin.l[-ineq]
+	}
 	
 	# make loglike function that only depends on pars
 	logl <- function(pars) {
-		allpars[!fixed] <- pars
+		allpars[which(elements=="inc")] <- pars
 		object <- setpars(object,allpars)
 		ans = -as.numeric(logLik(object))
-		if(is.na(ans)) ans = 100000 # remove magic number here!!!!!!!!
+		if(is.na(ans)) ans = 1000000 # remove magic number here!!!
 		ans
 	}
 	
