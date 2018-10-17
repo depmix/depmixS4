@@ -1,18 +1,17 @@
 
-
-
 setMethod("hessian", "mix",
     function(object,fixed=NULL,equal=NULL,
 	conrows=NULL,conrows.upper=NULL,conrows.lower=NULL,	
 	method="finiteDifferences", ...) {
+
+	if(is.nan(logLik(object))) stop("Log likelihood is 'NaN'; cannot compute hessian. ")
 	
+	# check for presence of constraints
 	fi <- !is.null(fixed)
 	cr <- !is.null(conrows)
 	eq <- !is.null(equal)
 	
 	constr <- any(c(fi,cr,eq))
-	
-	if(is.nan(logLik(object))) stop("Log likelihood is 'NaN'; cannot compute hessian. ")
 	
 	# determine which parameters are fixed
 	if(fi) {
@@ -27,13 +26,7 @@ setMethod("hessian", "mix",
 	}
 	
 	# set those fixed parameters in the appropriate submodels
-	object <- setpars(object,fixed,which="fixed")			
-	
-	# get the full set of parameters
-	allpars <- getpars(object)
-	
-	# get the reduced set of parameters, ie the ones that will be optimized
-	pars <- allpars[!fixed]
+	object <- setpars(object,fixed,which="fixed")
 	
 	constraints <- getConstraints(object)
 	
@@ -43,7 +36,7 @@ setMethod("hessian", "mix",
 	par.u=constraints$par.u
 	par.l=constraints$par.l
 	
-	# incorporate equality constraints provided with the fit function, if any
+	# incorporate equality constraints provided with the hessian function, if any
 	if(eq) {
 		if(length(equal)!=npar(object)) stop("'equal' does not have correct length")
 		equal <- pa2conr(equal)$conr
@@ -70,6 +63,16 @@ setMethod("hessian", "mix",
 		}
 	}
 	
+	# get the full set of parameters
+	allpars <- getpars(object)
+	
+	# get the reduced set of parameters, ie the ones that the hessian will be computed for
+	# only non-fixed parameters
+	pars <- allpars[!fixed]
+	
+	# TODO: now also remove parameters that are on their boundary
+	
+	
 	# select only those columns of the constraint matrix that correspond to non-fixed parameters
 	linconFull <- lincon
 	lincon <- lincon[,!fixed,drop=FALSE]
@@ -84,6 +87,7 @@ setMethod("hessian", "mix",
 	
 	# TODO: remove rows of lincon with inequality constraints!!!!
 	
+	
 	# make loglike function that only depends on pars
 	logl <- function(pars) {
 		allpars[!fixed] <- pars
@@ -95,8 +99,10 @@ setMethod("hessian", "mix",
 	
 	fdh <- fdHess(pars,logl)
 	
-	hess <- hessian2vcov(fdh$Hessian,lincon)
-	
-	return(hess)
+	# also return list of length npar that specifies for which parameters 
+	# the hessian has been computed and for which this has been skipped due
+	# to being 1) fixed or 2) on the boundary
+		
+	return(list(hessian=fdh$Hessian,lincon=lincon))
 }
 )

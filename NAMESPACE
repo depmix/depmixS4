@@ -23,7 +23,8 @@ export(
 	em.control,
 	viterbi,
 	mlogit,
-	logLik
+	logLik,
+	hessian2vcov
 )
 
 exportClasses(
