@@ -67,7 +67,8 @@ exportMethods(
 	summary,
 	logLik,
 	getmodel,
-	hessian
+	hessian,
+	vcov
 )
 
 useDynLib(depmixS4, .registration = TRUE)
