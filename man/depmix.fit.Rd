@@ -28,7 +28,7 @@
 
 	\S4method{fit}{mix}(object, fixed=NULL, equal=NULL, 
 		conrows=NULL, conrows.upper=NULL, conrows.lower=NULL, 
-		method=NULL, verbose=TRUE,
+		method=NULL, verbose=FALSE,
 		emcontrol=em.control(),
 		solnpcntrl=list(rho = 1, outer.iter = 400, inner.iter = 800, 
 		delta = 1e-7, tol = 1e-8),

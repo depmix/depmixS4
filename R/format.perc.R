@@ -1,5 +1,6 @@
-format.perc <-
-function (probs, digits) {
-    paste(format(100 * probs, trim = TRUE, 
-                 scientific = FALSE, digits = digits), "%")
+
+formatperc <-
+function (x, digits) {
+    paste(format(100 * x, trim = TRUE, 
+                 scientific = FALSE, digits = digits), "%", sep="")
 }

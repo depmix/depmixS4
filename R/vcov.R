@@ -32,7 +32,7 @@
 setMethod("vcov", "mix",
     function(object, fixed=NULL, equal=NULL, 
 	conrows=NULL, conrows.upper=NULL, conrows.lower=NULL, 
-	tolerance=1e-9, 	
+	tolerance=1e-6, 	
 	method="finiteDifferences", ...) {
 	
 	if(is.nan(logLik(object))) stop("Log likelihood is 'NaN'; cannot compute variance-covariance. ")

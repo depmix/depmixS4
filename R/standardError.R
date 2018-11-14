@@ -19,9 +19,9 @@
 #
 
 setMethod("standardError", "mix",
-    function(object, digits=4, fixed=NULL, equal=NULL, 
+    function(object, fixed=NULL, equal=NULL, 
 	conrows=NULL, conrows.upper=NULL, conrows.lower=NULL, 
-	tolerance=1e-9, 	
+	tolerance=1e-6, 	
 	method="finiteDifferences", ...) {
 		
 	vc <- vcov(object,fixed=fixed,equal=equal,
@@ -36,9 +36,9 @@ setMethod("standardError", "mix",
 	
 	parsinc <- pars[which(elements=="inc")]
 		
-	ret <- data.frame(pars=round(pars,digits), constr=elements, ses=NA)
+	ret <- data.frame(par=pars, constr=elements, se=NA)
 	
-	ret$ses[which(elements=="inc")] <- round(ses,digits)
+	ret$ses[which(elements=="inc")] <- ses
 	
 	return(ret)
 }

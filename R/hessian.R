@@ -29,7 +29,7 @@
 
 setMethod("hessian", "mix",
     function(object, 
-	tolerance=1e-9, 	
+	tolerance=1e-6, 	
 	method="finiteDifferences", ...) {
 
 	if(is.nan(logLik(object))) stop("Log likelihood is 'NaN'; cannot compute hessian. ")
@@ -39,9 +39,8 @@ setMethod("hessian", "mix",
 	
 	# get parameter boundaries from the model object
 	constraints <- getConstraints(object)
-	
-	par.u=constraints$par.u
-	par.l=constraints$par.l
+	par.u <- constraints$par.u
+	par.l <- constraints$par.l
 	
 	# get fixed parameters
 	fixed <- getpars(object,"fixed")
@@ -66,7 +65,7 @@ setMethod("hessian", "mix",
 	logl <- function(pars) {
 		allpars[which(elements=="inc")] <- pars
 		object <- setpars(object,allpars)
-		ans = -as.numeric(logLik(object))
+		ans <- -as.numeric(logLik(object))
 		if(is.na(ans)) ans = 1000000 # remove magic number here!!!
 		ans
 	}

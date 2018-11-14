@@ -3,7 +3,7 @@ import(methods, MASS, nnet, Rsolnp)
 importFrom(stats, predict, simulate)
 
 importFrom("stats", "cov", "cov.wt", "dbinom", "dgamma", "dmultinom",
-             "dnorm", "dpois", "gaussian", "glm.fit", "lm.fit",
+             "dnorm", "qnorm", "dpois", "gaussian", "glm.fit", "lm.fit",
              "lm.wfit", "mahalanobis", "make.link", "model.frame",
              "model.matrix", "model.response", "pchisq", "rbinom",
              "rgamma", "rmultinom", "rnorm", "rpois", "sd")
@@ -23,17 +23,15 @@ export(
 	em.control,
 	viterbi,
 	mlogit,
-	logLik,
-	hessian2vcov,
-	format.perc
+	logLik
 )
 
 exportClasses(
 	depmix,
 	depmix.sim,
+	depmix.fitted,
 	mix,
 	mix.sim,
-	depmix.fitted,
 	mix.fitted,
 	response,
 	GLMresponse,
