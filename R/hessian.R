@@ -76,3 +76,5 @@ setMethod("hessian", "mix",
 	return(list(hessian=fdh$Hessian,elements=elements))
 }
 )
+
+

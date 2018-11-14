@@ -24,7 +24,8 @@ export(
 	viterbi,
 	mlogit,
 	logLik,
-	hessian2vcov
+	hessian2vcov,
+	format.perc
 )
 
 exportClasses(
@@ -68,7 +69,9 @@ exportMethods(
 	logLik,
 	getmodel,
 	hessian,
-	vcov
+	vcov,
+	standardError,
+	confint
 )
 
 useDynLib(depmixS4, .registration = TRUE)

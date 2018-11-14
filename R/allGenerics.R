@@ -56,6 +56,8 @@ setGeneric("getmodel", function(object,...) standardGeneric("getmodel"))
 
 setGeneric("hessian", function(object, ...) standardGeneric("hessian"))
 
+setGeneric("standardError", function(object, ...) standardGeneric("standardError"))
+
 
 # functions 
 setGeneric("fit", function(object, ...) standardGeneric("fit"))

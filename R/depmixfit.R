@@ -102,7 +102,10 @@ setMethod("fit",
 	    
 	    # select only those columns of the constraint matrix that correspond to non-fixed parameters
 	    linconFull <- lincon
-	    lincon <- lincon[,!fixed,drop=FALSE]			
+		lin.uFull <- lin.u
+		lin.lFull <- lin.l 
+		
+	    lincon <- lincon[,!fixed,drop=FALSE]		
 	    
 	    # remove redundant rows in lincon (all zeroes)
 	    allzero <- which(apply(lincon,1,function(y) all(y==0)))
@@ -219,8 +222,8 @@ setMethod("fit",
 	    }
 	    
 	    object@conMat <- linconFull
-	    object@lin.upper <- lin.u
-	    object@lin.lower <- lin.l
+	    object@lin.upper <- lin.uFull
+	    object@lin.lower <- lin.lFull
 	    
 	    object@posterior <- viterbi(object)
 	    

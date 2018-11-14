@@ -58,15 +58,21 @@ setMethod("vcov", "mix",
 	
 	# set those fixed parameters in the appropriate submodels
 	object <- setpars(object,fixed,which="fixed")	
-
+	
 	# get standard constraints from (sub)models
 	constraints <- getConstraints(object)
 
-	lincon=constraints$lincon
-	lin.u=constraints$lin.u
-	lin.l=constraints$lin.l
-	par.u=constraints$par.u
-	par.l=constraints$par.l
+	lincon <- constraints$lincon
+	lin.u <- constraints$lin.u
+	lin.l <- constraints$lin.l
+	par.u <- constraints$par.u
+	par.l <- constraints$par.l
+	
+	if(class(object)=="depmix.fitted"|class(object)=="mix.fitted") {
+		lincon <- object@conMat
+		lin.u <- object@lin.upper
+		lin.l <- object@lin.lower
+	} 
 	
 	# incorporate equality constraints provided with the hessian function, if any
 	if(eq) {
