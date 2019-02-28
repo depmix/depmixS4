@@ -38,7 +38,7 @@ setMethod("standardError", "mix",
 		
 	ret <- data.frame(par=pars, constr=elements, se=NA)
 	
-	ret$ses[which(elements=="inc")] <- ses
+	ret$se[which(elements=="inc")] <- ses
 	
 	return(ret)
 }
