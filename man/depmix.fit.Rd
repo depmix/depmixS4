@@ -235,7 +235,7 @@ pars <- c(unlist(getpars(fmod1)))
 pars[1]=0
 pars[2]=1 # this means the process will always start in state 2
 pars[13]=0.5
-pars[14]=0.5 # the corr parameters in state 1 are now both 0, corresponding the 0.5 prob
+pars[14]=0.5 # the corr parameters are now both 0.5
 mod2 <- setpars(mod1,pars)
 
 # fix the parameters by setting: 
