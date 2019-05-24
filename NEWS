@@ -2,7 +2,7 @@ Changes in depmixS4 version 1.4-0
 
 Major changes
 
-  o Added functionality for computing a finite differences hessian of fitted 
+  o Added functionality for computing a finite differences Hessian of fitted 
     models, which is returned by default from the fit function. 
 	
 Minor changes
