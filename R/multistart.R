@@ -22,7 +22,7 @@ setMethod(
 				"out of",
 				nstart, 
 				"attempts failed; result is based on ", 
-				nr-nfailed, 
+				nstart-nfailed, 
 				"starting values.\n"
 				)
 		}
