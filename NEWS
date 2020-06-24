@@ -1,3 +1,14 @@
+Changes in depmixS4 version 1.4-2
+
+Major changes
+  o  
+
+Minor changes
+
+  o Changed rdirichlet to reliably give a vector of 1's when alpha has length 1. 
+    This fixes issue with random.start in EM for nclasses = 1 (see 
+    https://stackoverflow.com/q/56735420/13797727)
+
 Changes in depmixS4 version 1.4-1
 
 Major changes
