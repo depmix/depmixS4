@@ -25,12 +25,14 @@
 }
 
 \usage{
+	\S4method{posterior}{depmix}(object, type = c("viterbi", "global", "local", "filtering", "smoothing"))
 	\S4method{posterior}{depmix.fitted}(object, type = c("viterbi", "global", "local", "filtering", "smoothing"))
+	\S4method{posterior}{mix}(object, type = c("viterbi", "global", "local", "filtering", "smoothing"))
 	\S4method{posterior}{mix.fitted}(object, type = c("viterbi", "global", "local", "filtering", "smoothing"))
 }
 
 \arguments{
-  \item{object}{A (dep-)mix object.}
+  \item{object}{A (fitted)(dep-)mix object.}
   \item{type}{character, partial matching allowed. The type of classification or posterior probability desired. }
 }
 

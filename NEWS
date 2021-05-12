@@ -17,9 +17,6 @@ Minor changes
 
 Changes in depmixS4 version 1.4-2
 
-Major changes
-  o  
-
 Minor changes
 
   o Changed rdirichlet to reliably give a vector of 1's when alpha has length 1. 
