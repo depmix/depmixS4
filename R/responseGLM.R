@@ -156,7 +156,7 @@ setMethod("show","GLMresponse",
 		print(object@parameters$coefficients)
 		if(object@family$family=="multinomial"&object@family$link!="identity") {
 			# also print probabilities at covariate values of zero
-		  cat("Probalities at zero values of the covariates.\n")
+		  cat("Probabilities at zero values of the covariates.\n")
 		  if(!(is.null(dim(object@parameters$coefficients)))) {
 		    if(dim(object@parameters$coefficients)[1]>1) {
 		      cat(object@family$linkinv(object@parameters$coefficients[1,],base=object@family$base),"\n")
@@ -177,7 +177,7 @@ setMethod("show","GLMresponse",
 		}
 		if(object@family$family=="binomial") {
 			# also print probabilities at covariate values of zero
-			cat("Probality at zero values of the covariates.","\n")
+			cat("Probability at zero values of the covariates.","\n")
 			cat(object@family$linkinv(object@parameters$coefficients[1]),"\n")
 		}
 		if(object@family$family=="gaussian") {
