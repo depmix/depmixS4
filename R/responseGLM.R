@@ -161,13 +161,13 @@ setMethod("show","GLMresponse",
 		    if(dim(object@parameters$coefficients)[1]>1) {
 		      cat(object@family$linkinv(object@parameters$coefficients[1,],base=object@family$base),"\n")
 		    } else {
-		      if("(Intercept)" %in% rownames(object@parameters$coefficients) ){
-		        cat(object@family$linkinv(object@parameters$coefficients,base=object@family$base),"\n")
-		      } else{
-		        numStates <- dim(object@parameters$coefficients)[2]
-		        cat( object@family$linkinv(rep(0, numStates),base=object@family$base),"\n")
+		      
+		      zeroPred <-object@x[1,]
+		      zeroPred[names(zeroPred) != "(Intercept)"] <- 0
+		      cat(object@family$linkinv(
+		        zeroPred %*% object@parameters$coefficients,
+		        base=object@family$base),"\n")
 		      }
-		    }
 		  } else {
 		    if(object@family$link=="identity") cat(object@family$linkinv(object@parameters$coefficients),"\n")
 		    else {
