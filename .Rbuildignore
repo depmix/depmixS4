@@ -1,0 +1,6 @@
+^AGENTS[.]md$
+(^|/)[.]gitignore$
+(^|/)[.]DS_Store$
+^Rplots[.]pdf$
+^src/.*[.](o|so|dll|dylib)$
+^tools/refactor-checks/results/

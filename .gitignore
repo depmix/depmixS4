@@ -1,0 +1,29 @@
+# macOS/editor detritus
+.DS_Store
+**/.DS_Store
+*~
+*.swp
+AGENTS.md
+
+# R session and plot artifacts
+.Rhistory
+.RData
+.Ruserdata
+Rplots.pdf
+
+# R package build/check artifacts
+*.tar.gz
+*.tgz
+*.zip
+*.Rcheck/
+/*_*.tar.gz
+/build/
+
+# Compiled objects produced during local installs/checks
+/src/*.o
+/src/*.so
+/src/*.dll
+/src/*.dylib
+
+# Generated refactor-check reports; the script itself is tracked.
+/tools/refactor-checks/results/
