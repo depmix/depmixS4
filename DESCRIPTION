@@ -16,5 +16,6 @@ Imports: stats, stats4, methods
 Suggests: gamlss, gamlss.dist
 Description: Fits latent (hidden) Markov models on mixed categorical and continuous (time series) data, otherwise known as dependent mixture models, see Visser & Speekenbrink (2010, <DOI:10.18637/jss.v036.i07>).
 License: GPL (>=2)
+BugReports: https://github.com/depmix/depmixS4/issues
 URL: https://depmix.github.io/
 RoxygenNote: 6.1.0
