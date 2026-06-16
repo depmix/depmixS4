@@ -18,9 +18,13 @@ loglik <- function(object) {
 }
 
 check_equal <- function(value, expected, tolerance = 1e-6, label = NULL) {
-	if(!isTRUE(all.equal(value, expected, tolerance = tolerance,
-		check.attributes = FALSE))) {
-		stop(paste("unexpected value", label), call. = FALSE)
+	comparison <- all.equal(value, expected, tolerance = tolerance,
+		check.attributes = FALSE)
+	if(!isTRUE(comparison)) {
+		message <- "unexpected value"
+		if(!is.null(label)) message <- paste(message, label)
+		stop(paste(message, paste(comparison, collapse = "; "), sep = ": "),
+			call. = FALSE)
 	}
 }
 
@@ -78,11 +82,29 @@ cat("Running source-driven dontrun example topics\n")
 dontrun_fit <- run_example("fit", run.dontrun = TRUE)
 check_metric(dontrun_fit, "fmod1", -248.972219690931)
 check_metric(dontrun_fit, "fmod1ms", -247.430638392413)
-check_metric(dontrun_fit, "fmod2", -249.212895124180)
-check_metric(dontrun_fit, "fmod3", -277.106880997915)
-check_metric(dontrun_fit, "fmod3b", -277.106880997915)
 check_metric(dontrun_fit, "fmod4", -1083.036278731958)
 check_metric(dontrun_fit, "fmod5", -951.291754995437)
+
+fmod2_pars <- getpars(dontrun_fit$fmod2)
+check_equal(fmod2_pars[c(1, 2, 13, 14)], c(0, 1, 0.5, 0.5),
+	label = "fixed-parameter fit constraints")
+check_metric(dontrun_fit, "fmod2", -249.212895124180,
+	tolerance = 1e-4)
+
+constrained_ll <- c(fmod3 = loglik(dontrun_fit$fmod3),
+	fmod3b = loglik(dontrun_fit$fmod3b))
+check_equal(constrained_ll, c(fmod3 = -277.106880997915,
+	fmod3b = -277.106880997915), tolerance = 1e-4,
+	label = "linear-constraint fit logLik")
+check_equal(constrained_ll["fmod3"], constrained_ll["fmod3b"],
+	tolerance = 1e-4, label = "equivalent linear-constraint specifications")
+
+fmod3_pars <- getpars(dontrun_fit$fmod3)
+fmod3b_pars <- getpars(dontrun_fit$fmod3b)
+check_equal(fmod3_pars[c(4, 6)], fmod3_pars[c(8, 10)],
+	label = "equal-pattern fit constraints")
+check_equal(fmod3b_pars[c(4, 6)], fmod3b_pars[c(8, 10)],
+	label = "constraint-matrix fit constraints")
 
 if(requireNamespace("gamlss", quietly = TRUE) &&
 	requireNamespace("gamlss.dist", quietly = TRUE)) {
