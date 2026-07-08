@@ -8,7 +8,7 @@ importFrom("stats", "cov", "cov.wt", "dbinom", "dgamma", "dmultinom",
              "model.matrix", "model.response", "pchisq", "rbinom",
              "rgamma", "rmultinom", "rnorm", "rpois", "sd")
 
-importFrom(stats4, AIC, BIC, logLik, nobs, summary)
+importFrom(stats4, AIC, BIC, confint, logLik, nobs, summary, vcov)
 
 importFrom(nlme, fdHess)
 
