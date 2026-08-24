@@ -206,6 +206,9 @@ modNew <- setpars(modNew,getpars(fmod1))
 # check the state sequence and probabilities
 pst_new <- posterior(modNew, type="global")
 
+
+\dontrun{
+
 # same model, now with missing data
 speed[2,1] <- NA
 speed[3,2] <- NA

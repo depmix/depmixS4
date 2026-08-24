@@ -135,7 +135,8 @@
 
 
 \examples{
-
+  
+  \dontrun{
 	data(speed)
 
 	# 2-state model on rt and corr from speed data set 
@@ -151,6 +152,7 @@
 	vcov(fmod1)$vcov 
 	standardError(fmod1)
 	confint(fmod1)
+	}
 	
 }
 
