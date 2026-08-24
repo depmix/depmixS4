@@ -1,6 +1,9 @@
 ^AGENTS[.]md$
+(^|/)[.]git($|/)
 (^|/)[.]gitignore$
 (^|/)[.]DS_Store$
 ^Rplots[.]pdf$
 ^src/.*[.](o|so|dll|dylib)$
 ^tools/refactor-checks/results/
+^tools/profiling/
+tests/test4examples.R
