@@ -27,3 +27,6 @@ Rplots.pdf
 
 # Generated refactor-check reports; the script itself is tracked.
 /tools/refactor-checks/results/
+
+# Generated profiling reports; source files and compact baselines are tracked.
+/tools/profiling/results/
