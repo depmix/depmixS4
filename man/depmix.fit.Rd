@@ -260,8 +260,6 @@ llratio(fmod1,fmod2)
 # set the starting values of this model to the optimized 
 # values of the previously fitted model to speed optimization
 
-\dontrun{
-
 pars <- c(unlist(getpars(fmod2)))
 pars[4] <- pars[8] <- -4
 pars[6] <- pars[10] <- 10
